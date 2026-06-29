@@ -228,10 +228,16 @@ services:
     <<: *restart-policy
     environment:
       POSTGRES_USER: provena
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       POSTGRES_DB: openprovena
+      # POSTGRES_PASSWORD est lu depuis le fichier secret via l'entrypoint
     secrets:
       - postgres_password
+    entrypoint:
+      - sh
+      - -c
+      - |
+        export POSTGRES_PASSWORD=$(cat /run/secrets/postgres_password)
+        exec docker-entrypoint.sh postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -242,7 +248,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 20s
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -285,9 +291,15 @@ services:
     <<: *restart-policy
     environment:
       RABBITMQ_DEFAULT_USER: provena
-      RABBITMQ_DEFAULT_PASS_FILE: /run/secrets/rabbitmq_password
+      # RABBITMQ_DEFAULT_PASS est lu depuis le fichier secret via l'entrypoint
     secrets:
       - rabbitmq_password
+    entrypoint:
+      - sh
+      - -c
+      - |
+        export RABBITMQ_DEFAULT_PASS=$(cat /run/secrets/rabbitmq_password)
+        exec docker-entrypoint.sh rabbitmq-server
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
