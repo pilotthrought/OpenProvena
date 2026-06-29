@@ -95,12 +95,10 @@ services:
     <<: *restart-policy
     environment:
       ENVIRONMENT: production
-      POSTGRES_URL: postgresql+asyncpg://provena:$$(cat /run/secrets/postgres_password)@postgres:5432/openprovena
       REDIS_URL: redis://redis:6379/0
       ELASTICSEARCH_URL: http://elasticsearch:9200
       NEO4J_URI: bolt://neo4j:7687
       NEO4J_USER: neo4j
-      CELERY_BROKER_URL: amqp://provena:$$(cat /run/secrets/rabbitmq_password)@rabbitmq:5672//
       CELERY_RESULT_BACKEND: redis://redis:6379/1
       ALLOWED_HOSTS: '["api.${DOMAIN}"]'
       CORS_ORIGINS: '["https://${DOMAIN}"]'
@@ -110,12 +108,15 @@ services:
       - neo4j_password
       - rabbitmq_password
       - secret_key
-    entrypoint: >
-      sh -c '
-        export SECRET_KEY=$$(cat /run/secrets/secret_key) &&
-        export NEO4J_PASSWORD=$$(cat /run/secrets/neo4j_password) &&
-        exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4 --proxy-headers --forwarded-allow-ips="*"
-      '
+    entrypoint:
+      - sh
+      - -c
+      - |
+        export SECRET_KEY=$(cat /run/secrets/secret_key)
+        export NEO4J_PASSWORD=$(cat /run/secrets/neo4j_password)
+        export POSTGRES_URL="postgresql+asyncpg://provena:$(cat /run/secrets/postgres_password)@postgres:5432/openprovena"
+        export CELERY_BROKER_URL="amqp://provena:$(cat /run/secrets/rabbitmq_password)@rabbitmq:5672//"
+        exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4 --proxy-headers --forwarded-allow-ips="*" 
     depends_on:
       postgres:
         condition: service_healthy
@@ -161,22 +162,22 @@ services:
       dockerfile: Dockerfile
     container_name: provena_worker
     <<: *restart-policy
-    command: celery -A app.worker worker --loglevel=warning --concurrency=4 -Q trust,crawl,default
     environment:
       ENVIRONMENT: production
-      POSTGRES_URL: postgresql+asyncpg://provena:$$(cat /run/secrets/postgres_password)@postgres:5432/openprovena
       REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: amqp://provena:$$(cat /run/secrets/rabbitmq_password)@rabbitmq:5672//
       CELERY_RESULT_BACKEND: redis://redis:6379/1
     secrets:
       - postgres_password
       - rabbitmq_password
       - secret_key
-    entrypoint: >
-      sh -c '
-        export SECRET_KEY=$$(cat /run/secrets/secret_key) &&
+    entrypoint:
+      - sh
+      - -c
+      - |
+        export SECRET_KEY=$(cat /run/secrets/secret_key)
+        export POSTGRES_URL="postgresql+asyncpg://provena:$(cat /run/secrets/postgres_password)@postgres:5432/openprovena"
+        export CELERY_BROKER_URL="amqp://provena:$(cat /run/secrets/rabbitmq_password)@rabbitmq:5672//"
         exec celery -A app.worker worker --loglevel=warning --concurrency=4 -Q trust,crawl,default
-      '
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -198,17 +199,18 @@ services:
       dockerfile: Dockerfile
     container_name: provena_beat
     <<: *restart-policy
+    environment:
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
     secrets:
       - rabbitmq_password
       - secret_key
-    entrypoint: >
-      sh -c '
-        export SECRET_KEY=$$(cat /run/secrets/secret_key) &&
+    entrypoint:
+      - sh
+      - -c
+      - |
+        export SECRET_KEY=$(cat /run/secrets/secret_key)
+        export CELERY_BROKER_URL="amqp://provena:$(cat /run/secrets/rabbitmq_password)@rabbitmq:5672//"
         exec celery -A app.worker beat --loglevel=warning
-      '
-    environment:
-      CELERY_BROKER_URL: amqp://provena:$$(cat /run/secrets/rabbitmq_password)@rabbitmq:5672//
-      CELERY_RESULT_BACKEND: redis://redis:6379/1
     depends_on:
       rabbitmq:
         condition: service_healthy
