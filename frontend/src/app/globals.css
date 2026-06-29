@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink:        #1a1a1a;
+  --off-white:  #f5f4f0;
+  --rule:       #d4d0c8;
+  --muted:      #6b6b6b;
+  --trust-high: #2d6a4f;
+  --trust-mid:  #b5832a;
+  --trust-low:  #c0392b;
+}
+
+html { background: var(--off-white); color: var(--ink); }
+
+/* Score bar animation */
+@keyframes grow {
+  from { width: 0 }
+  to   { width: var(--target-width) }
+}
+.score-bar-fill { animation: grow 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+/* Rule dividers */
+.rule-top    { border-top: 0.5px solid var(--rule); }
+.rule-bottom { border-bottom: 0.5px solid var(--rule); }
+.rule-2      { border-top: 2px solid var(--ink); }
+
+/* Card hover */
+.card-hover  { transition: box-shadow 0.15s; }
+.card-hover:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }

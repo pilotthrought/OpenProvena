@@ -1,0 +1,370 @@
+0 verbose cli /usr/bin/node /usr/bin/npm
+1 info using npm@10.9.7
+2 info using node@v22.22.2
+3 silly config load:file:/usr/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/claude/openprovena/frontend/.npmrc
+5 silly config load:file:/root/.npmrc
+6 silly config load:file:/usr/etc/npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" "./npm-offline-cache"
+9 verbose logfile logs-max:10 dir:/home/claude/openprovena/frontend/npm-offline-cache/_logs/2026-06-17T20_25_20_963Z-
+10 verbose logfile /home/claude/openprovena/frontend/npm-offline-cache/_logs/2026-06-17T20_25_20_963Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:2146435072 maxSize:536608768 maxEntrySize:268304384
+13 silly idealTree buildDeps
+14 http fetch GET 200 https://registry.npmjs.org/npm 138ms
+15 silly reify moves {}
+16 silly audit bulk request {
+16 silly audit   '@alloc/quick-lru': [ '5.2.0' ],
+16 silly audit   '@emnapi/runtime': [ '1.11.1' ],
+16 silly audit   '@img/colour': [ '1.1.0' ],
+16 silly audit   '@img/sharp-darwin-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-darwin-x64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-libvips-darwin-arm64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-darwin-x64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-arm': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-arm64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-ppc64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-riscv64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-s390x': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linux-x64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linuxmusl-arm64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-libvips-linuxmusl-x64': [ '1.2.4' ],
+16 silly audit   '@img/sharp-linux-arm': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-ppc64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-riscv64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-s390x': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linux-x64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linuxmusl-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-linuxmusl-x64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-wasm32': [ '0.34.5' ],
+16 silly audit   '@img/sharp-win32-arm64': [ '0.34.5' ],
+16 silly audit   '@img/sharp-win32-ia32': [ '0.34.5' ],
+16 silly audit   '@img/sharp-win32-x64': [ '0.34.5' ],
+16 silly audit   '@jridgewell/gen-mapping': [ '0.3.13' ],
+16 silly audit   '@jridgewell/resolve-uri': [ '3.1.2' ],
+16 silly audit   '@jridgewell/sourcemap-codec': [ '1.5.5' ],
+16 silly audit   '@jridgewell/trace-mapping': [ '0.3.31' ],
+16 silly audit   '@next/env': [ '15.5.19' ],
+16 silly audit   '@next/swc-darwin-arm64': [ '15.5.19' ],
+16 silly audit   '@next/swc-darwin-x64': [ '15.5.19' ],
+16 silly audit   '@next/swc-linux-arm64-gnu': [ '15.5.19' ],
+16 silly audit   '@next/swc-linux-arm64-musl': [ '15.5.19' ],
+16 silly audit   '@next/swc-linux-x64-gnu': [ '15.5.19' ],
+16 silly audit   '@next/swc-linux-x64-musl': [ '15.5.19' ],
+16 silly audit   '@next/swc-win32-arm64-msvc': [ '15.5.19' ],
+16 silly audit   '@next/swc-win32-x64-msvc': [ '15.5.19' ],
+16 silly audit   '@nodelib/fs.scandir': [ '2.1.5' ],
+16 silly audit   '@nodelib/fs.stat': [ '2.0.5' ],
+16 silly audit   '@nodelib/fs.walk': [ '1.2.8' ],
+16 silly audit   '@reduxjs/toolkit': [ '2.12.0' ],
+16 silly audit   immer: [ '11.1.8', '10.2.0' ],
+16 silly audit   '@standard-schema/spec': [ '1.1.0' ],
+16 silly audit   '@standard-schema/utils': [ '0.3.0' ],
+16 silly audit   '@swc/helpers': [ '0.5.15' ],
+16 silly audit   '@types/d3-array': [ '3.2.2' ],
+16 silly audit   '@types/d3-color': [ '3.1.3' ],
+16 silly audit   '@types/d3-ease': [ '3.0.2' ],
+16 silly audit   '@types/d3-interpolate': [ '3.0.4' ],
+16 silly audit   '@types/d3-path': [ '3.1.1' ],
+16 silly audit   '@types/d3-scale': [ '4.0.9' ],
+16 silly audit   '@types/d3-shape': [ '3.1.8' ],
+16 silly audit   '@types/d3-time': [ '3.0.4' ],
+16 silly audit   '@types/d3-timer': [ '3.0.2' ],
+16 silly audit   '@types/node': [ '20.19.43' ],
+16 silly audit   '@types/react': [ '19.2.17' ],
+16 silly audit   '@types/react-dom': [ '19.2.3' ],
+16 silly audit   '@types/use-sync-external-store': [ '0.0.6' ],
+16 silly audit   'any-promise': [ '1.3.0' ],
+16 silly audit   anymatch: [ '3.1.3' ],
+16 silly audit   arg: [ '5.0.2' ],
+16 silly audit   autoprefixer: [ '10.5.0' ],
+16 silly audit   'baseline-browser-mapping': [ '2.10.38' ],
+16 silly audit   'binary-extensions': [ '2.3.0' ],
+16 silly audit   braces: [ '3.0.3' ],
+16 silly audit   browserslist: [ '4.28.2' ],
+16 silly audit   'camelcase-css': [ '2.0.1' ],
+16 silly audit   'caniuse-lite': [ '1.0.30001799' ],
+16 silly audit   chokidar: [ '3.6.0' ],
+16 silly audit   'glob-parent': [ '5.1.2', '6.0.2' ],
+16 silly audit   'client-only': [ '0.0.1' ],
+16 silly audit   clsx: [ '2.1.1' ],
+16 silly audit   commander: [ '4.1.1' ],
+16 silly audit   cssesc: [ '3.0.0' ],
+16 silly audit   csstype: [ '3.2.3' ],
+16 silly audit   'd3-array': [ '3.2.4' ],
+16 silly audit   'd3-color': [ '3.1.0' ],
+16 silly audit   'd3-ease': [ '3.0.1' ],
+16 silly audit   'd3-format': [ '3.1.2' ],
+16 silly audit   'd3-interpolate': [ '3.0.1' ],
+16 silly audit   'd3-path': [ '3.1.0' ],
+16 silly audit   'd3-scale': [ '4.0.2' ],
+16 silly audit   'd3-shape': [ '3.2.0' ],
+16 silly audit   'd3-time': [ '3.1.0' ],
+16 silly audit   'd3-time-format': [ '4.1.0' ],
+16 silly audit   'd3-timer': [ '3.0.1' ],
+16 silly audit   'decimal.js-light': [ '2.5.1' ],
+16 silly audit   'detect-libc': [ '2.1.2' ],
+16 silly audit   didyoumean: [ '1.2.2' ],
+16 silly audit   dlv: [ '1.1.3' ],
+16 silly audit   'electron-to-chromium': [ '1.5.375' ],
+16 silly audit   'es-errors': [ '1.3.0' ],
+16 silly audit   'es-toolkit': [ '1.47.1' ],
+16 silly audit   escalade: [ '3.2.0' ],
+16 silly audit   eventemitter3: [ '5.0.4' ],
+16 silly audit   'fast-glob': [ '3.3.3' ],
+16 silly audit   fastq: [ '1.20.1' ],
+16 silly audit   'fill-range': [ '7.1.1' ],
+16 silly audit   'fraction.js': [ '5.3.4' ],
+16 silly audit   fsevents: [ '2.3.3' ],
+16 silly audit   'function-bind': [ '1.1.2' ],
+16 silly audit   hasown: [ '2.0.4' ],
+16 silly audit   internmap: [ '2.0.3' ],
+16 silly audit   'is-binary-path': [ '2.1.0' ],
+16 silly audit   'is-core-module': [ '2.16.2' ],
+16 silly audit   'is-extglob': [ '2.1.1' ],
+16 silly audit   'is-glob': [ '4.0.3' ],
+16 silly audit   'is-number': [ '7.0.0' ],
+16 silly audit   jiti: [ '1.21.7' ],
+16 silly audit   lilconfig: [ '3.1.3' ],
+16 silly audit   'lines-and-columns': [ '1.2.4' ],
+16 silly audit   'lucide-react': [ '0.499.0' ],
+16 silly audit   merge2: [ '1.4.1' ],
+16 silly audit   micromatch: [ '4.0.8' ],
+16 silly audit   mz: [ '2.7.0' ],
+16 silly audit   nanoid: [ '3.3.12' ],
+16 silly audit   next: [ '15.5.19' ],
+16 silly audit   postcss: [ '8.4.31', '8.5.15' ],
+16 silly audit   'node-releases': [ '2.0.47' ],
+16 silly audit   'normalize-path': [ '3.0.0' ],
+16 silly audit   'object-assign': [ '4.1.1' ],
+16 silly audit   'object-hash': [ '3.0.0' ],
+16 silly audit   'path-parse': [ '1.0.7' ],
+16 silly audit   picocolors: [ '1.1.1' ],
+16 silly audit   picomatch: [ '2.3.2', '4.0.4' ],
+16 silly audit   pify: [ '2.3.0' ],
+16 silly audit   pirates: [ '4.0.7' ],
+16 silly audit   'postcss-import': [ '15.1.0' ],
+16 silly audit   'postcss-js': [ '4.1.0' ],
+16 silly audit   'postcss-load-config': [ '6.0.1' ],
+16 silly audit   'postcss-nested': [ '6.2.0' ],
+16 silly audit   'postcss-selector-parser': [ '6.1.4' ],
+16 silly audit   'postcss-value-parser': [ '4.2.0' ],
+16 silly audit   'queue-microtask': [ '1.2.3' ],
+16 silly audit   react: [ '19.2.7' ],
+16 silly audit   'react-dom': [ '19.2.7' ],
+16 silly audit   'react-is': [ '19.2.7' ],
+16 silly audit   'react-redux': [ '9.3.0' ],
+16 silly audit   'read-cache': [ '1.0.0' ],
+16 silly audit   readdirp: [ '3.6.0' ],
+16 silly audit   recharts: [ '3.8.1' ],
+16 silly audit   redux: [ '5.0.1' ],
+16 silly audit   'redux-thunk': [ '3.1.0' ],
+16 silly audit   reselect: [ '5.1.1' ],
+16 silly audit   resolve: [ '1.22.12' ],
+16 silly audit   reusify: [ '1.1.0' ],
+16 silly audit   'run-parallel': [ '1.2.0' ],
+16 silly audit   scheduler: [ '0.27.0' ],
+16 silly audit   semver: [ '7.8.4' ],
+16 silly audit   sharp: [ '0.34.5' ],
+16 silly audit   'source-map-js': [ '1.2.1' ],
+16 silly audit   'styled-jsx': [ '5.1.6' ],
+16 silly audit   sucrase: [ '3.35.1' ],
+16 silly audit   'supports-preserve-symlinks-flag': [ '1.0.0' ],
+16 silly audit   tailwindcss: [ '3.4.19' ],
+16 silly audit   thenify: [ '3.3.1' ],
+16 silly audit   'thenify-all': [ '1.6.0' ],
+16 silly audit   'tiny-invariant': [ '1.3.3' ],
+16 silly audit   tinyglobby: [ '0.2.17' ],
+16 silly audit   fdir: [ '6.5.0' ],
+16 silly audit   'to-regex-range': [ '5.0.1' ],
+16 silly audit   'ts-interface-checker': [ '0.1.13' ],
+16 silly audit   tslib: [ '2.8.1' ],
+16 silly audit   typescript: [ '5.9.3' ],
+16 silly audit   'undici-types': [ '6.21.0' ],
+16 silly audit   'update-browserslist-db': [ '1.2.3' ],
+16 silly audit   'use-sync-external-store': [ '1.6.0' ],
+16 silly audit   'util-deprecate': [ '1.0.2' ],
+16 silly audit   'victory-vendor': [ '37.3.6' ]
+16 silly audit }
+17 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/fsevents
+18 silly reify mark deleted [ '/home/claude/openprovena/frontend/node_modules/fsevents' ]
+19 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@next/swc-win32-x64-msvc
+20 silly reify mark deleted [
+20 silly reify   '/home/claude/openprovena/frontend/node_modules/@next/swc-win32-x64-msvc'
+20 silly reify ]
+21 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@next/swc-win32-arm64-msvc
+22 silly reify mark deleted [
+22 silly reify   '/home/claude/openprovena/frontend/node_modules/@next/swc-win32-arm64-msvc'
+22 silly reify ]
+23 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@next/swc-linux-arm64-musl
+24 silly reify mark deleted [
+24 silly reify   '/home/claude/openprovena/frontend/node_modules/@next/swc-linux-arm64-musl'
+24 silly reify ]
+25 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@next/swc-linux-arm64-gnu
+26 silly reify mark deleted [
+26 silly reify   '/home/claude/openprovena/frontend/node_modules/@next/swc-linux-arm64-gnu'
+26 silly reify ]
+27 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@next/swc-darwin-x64
+28 silly reify mark deleted [
+28 silly reify   '/home/claude/openprovena/frontend/node_modules/@next/swc-darwin-x64'
+28 silly reify ]
+29 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@next/swc-darwin-arm64
+30 silly reify mark deleted [
+30 silly reify   '/home/claude/openprovena/frontend/node_modules/@next/swc-darwin-arm64'
+30 silly reify ]
+31 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-win32-x64
+32 silly reify mark deleted [
+32 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-win32-x64'
+32 silly reify ]
+33 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-win32-ia32
+34 silly reify mark deleted [
+34 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-win32-ia32'
+34 silly reify ]
+35 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-win32-arm64
+36 silly reify mark deleted [
+36 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-win32-arm64'
+36 silly reify ]
+37 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-wasm32
+38 silly reify mark deleted [ '/home/claude/openprovena/frontend/node_modules/@img/sharp-wasm32' ]
+39 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@emnapi/runtime
+40 silly reify mark deleted [ '/home/claude/openprovena/frontend/node_modules/@emnapi/runtime' ]
+41 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-linuxmusl-arm64
+42 silly reify mark deleted [
+42 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-linuxmusl-arm64'
+42 silly reify ]
+43 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-linux-s390x
+44 silly reify mark deleted [
+44 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-linux-s390x'
+44 silly reify ]
+45 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-linux-riscv64
+46 silly reify mark deleted [
+46 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-linux-riscv64'
+46 silly reify ]
+47 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-linux-ppc64
+48 silly reify mark deleted [
+48 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-linux-ppc64'
+48 silly reify ]
+49 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-linux-arm64
+50 silly reify mark deleted [
+50 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-linux-arm64'
+50 silly reify ]
+51 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-linux-arm
+52 silly reify mark deleted [
+52 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-linux-arm'
+52 silly reify ]
+53 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linuxmusl-arm64
+54 silly reify mark deleted [
+54 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linuxmusl-arm64'
+54 silly reify ]
+55 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-s390x
+56 silly reify mark deleted [
+56 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-s390x'
+56 silly reify ]
+57 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-riscv64
+58 silly reify mark deleted [
+58 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-riscv64'
+58 silly reify ]
+59 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-ppc64
+60 silly reify mark deleted [
+60 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-ppc64'
+60 silly reify ]
+61 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-arm64
+62 silly reify mark deleted [
+62 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-arm64'
+62 silly reify ]
+63 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-arm
+64 silly reify mark deleted [
+64 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-linux-arm'
+64 silly reify ]
+65 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-darwin-x64
+66 silly reify mark deleted [
+66 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-darwin-x64'
+66 silly reify ]
+67 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-darwin-arm64
+68 silly reify mark deleted [
+68 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-libvips-darwin-arm64'
+68 silly reify ]
+69 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-darwin-x64
+70 silly reify mark deleted [
+70 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-darwin-x64'
+70 silly reify ]
+71 verbose reify failed optional dependency /home/claude/openprovena/frontend/node_modules/@img/sharp-darwin-arm64
+72 silly reify mark deleted [
+72 silly reify   '/home/claude/openprovena/frontend/node_modules/@img/sharp-darwin-arm64'
+72 silly reify ]
+73 http cache @next/swc-linux-x64-musl@https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-15.5.19.tgz 0ms (cache hit)
+74 http cache @img/sharp-linuxmusl-x64@https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.34.5.tgz 0ms (cache hit)
+75 http cache @img/sharp-libvips-linuxmusl-x64@https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz 0ms (cache hit)
+76 http cache @emnapi/runtime@https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.1.tgz 0ms (cache hit)
+77 silly tarball no local data for @next/swc-linux-x64-musl@https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-15.5.19.tgz. Extracting by manifest.
+78 silly tarball no local data for @img/sharp-linuxmusl-x64@https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.34.5.tgz. Extracting by manifest.
+79 silly tarball no local data for @img/sharp-libvips-linuxmusl-x64@https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz. Extracting by manifest.
+80 silly tarball no local data for @emnapi/runtime@https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.1.tgz. Extracting by manifest.
+81 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 178ms
+82 silly audit report {
+82 silly audit report   postcss: [
+82 silly audit report     {
+82 silly audit report       id: 1117015,
+82 silly audit report       url: 'https://github.com/advisories/GHSA-qx2v-qp2m-jg93',
+82 silly audit report       title: 'PostCSS has XSS via Unescaped </style> in its CSS Stringify Output',
+82 silly audit report       severity: 'moderate',
+82 silly audit report       vulnerable_versions: '<8.5.10',
+82 silly audit report       cwe: [Array],
+82 silly audit report       cvss: [Object]
+82 silly audit report     }
+82 silly audit report   ]
+82 silly audit report }
+83 silly packumentCache corgi:https://registry.npmjs.org/postcss cache-miss
+84 http fetch GET 200 https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.34.5.tgz 289ms (cache miss)
+85 http fetch GET 200 https://registry.npmjs.org/postcss 133ms (cache miss)
+86 silly packumentCache corgi:https://registry.npmjs.org/postcss set size:undefined disposed:false
+87 http fetch GET 200 https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.1.tgz 319ms (cache miss)
+88 silly packumentCache corgi:https://registry.npmjs.org/next cache-miss
+89 http fetch GET 200 https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz 1142ms (cache miss)
+90 http fetch GET 200 https://registry.npmjs.org/next 1018ms (cache miss)
+91 silly packumentCache corgi:https://registry.npmjs.org/next set size:undefined disposed:false
+92 http fetch GET 200 https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-15.5.19.tgz 3236ms (cache miss)
+93 silly ADD
+94 silly ADD
+95 silly ADD
+96 silly ADD node_modules/@next/swc-linux-x64-musl
+97 silly ADD
+98 silly ADD
+99 silly ADD
+100 silly ADD
+101 silly ADD
+102 silly ADD
+103 silly ADD
+104 silly ADD
+105 silly ADD node_modules/@img/sharp-linuxmusl-x64
+106 silly ADD
+107 silly ADD
+108 silly ADD
+109 silly ADD
+110 silly ADD
+111 silly ADD
+112 silly ADD node_modules/@img/sharp-libvips-linuxmusl-x64
+113 silly ADD
+114 silly ADD
+115 silly ADD
+116 silly ADD
+117 silly ADD
+118 silly ADD
+119 silly ADD
+120 silly ADD
+121 silly ADD
+122 silly ADD
+123 silly ADD
+124 verbose cwd /home/claude/openprovena/frontend
+125 verbose os Linux 6.18.5
+126 verbose node v22.22.2
+127 verbose npm  v10.9.7
+128 notice
+128 notice New major version of npm available! 10.9.7 -> 11.17.0
+128 notice Changelog: https://github.com/npm/cli/releases/tag/v11.17.0
+128 notice To update run: npm install -g npm@11.17.0
+128 notice  { force: true, [Symbol(proc-log.meta)]: true }
+129 verbose exit 0
+130 info ok
