@@ -1,49 +1,35 @@
 #!/bin/sh
-# OpenProvena — Backup automatisé
-# À planifier via cron : 0 3 * * * /path/to/openprovena/scripts/backup.sh
+# OpenProvena — Backup automatique
 
 set -e
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT"
+# Dossier = parent du dossier scripts/
+APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+BACKUP_DIR="$APP_DIR/backups"
+LOGS_DIR="$APP_DIR/logs"
+TS=$(date +%Y%m%d_%H%M%S)
+KEEP_DAYS=30
 
-BACKUP_DIR="${BACKUP_DIR:-$ROOT/backups}"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-RETENTION_DAYS=30
+mkdir -p "$BACKUP_DIR" "$LOGS_DIR"
 
-mkdir -p "$BACKUP_DIR"
+DC="docker compose -f $APP_DIR/docker-compose.prod.yml"
 
-echo "==> Backup OpenProvena — $TIMESTAMP"
+echo "[$TS] Backup OpenProvena (APP_DIR=$APP_DIR)..."
 
-# ── PostgreSQL ────────────────────────────────────────────────────────────
-echo "==> Dump PostgreSQL..."
-docker compose -f docker-compose.prod.yml --env-file .env.production exec -T postgres \
-  pg_dump -U provena openprovena | gzip > "$BACKUP_DIR/postgres_${TIMESTAMP}.sql.gz"
-echo "✓ PostgreSQL : $BACKUP_DIR/postgres_${TIMESTAMP}.sql.gz"
+# PostgreSQL
+docker exec provena_postgres pg_dump -U provena openprovena \
+  | gzip > "$BACKUP_DIR/postgres_${TS}.sql.gz"
+echo "  ✓ PostgreSQL → postgres_${TS}.sql.gz"
 
-# ── Neo4j ─────────────────────────────────────────────────────────────────
-echo "==> Dump Neo4j..."
-docker compose -f docker-compose.prod.yml --env-file .env.production exec -T neo4j \
-  neo4j-admin database dump neo4j --to-stdout > "$BACKUP_DIR/neo4j_${TIMESTAMP}.dump" 2>/dev/null \
-  || echo "⚠  Neo4j dump échoué (non bloquant)"
+# Secrets chiffrés
+tar czf - -C "$APP_DIR" secrets/ 2>/dev/null \
+  | openssl enc -aes-256-cbc -pbkdf2 \
+      -pass file:"$APP_DIR/secrets/secret_key.txt" \
+  > "$BACKUP_DIR/secrets_${TS}.tar.gz.enc"
+echo "  ✓ Secrets → secrets_${TS}.tar.gz.enc"
 
-# ── Secrets (chiffré) ─────────────────────────────────────────────────────
-echo "==> Archive des secrets..."
-tar czf - secrets/ | gpg --symmetric --cipher-algo AES256 --batch --passphrase-file secrets/secret_key.txt \
-  > "$BACKUP_DIR/secrets_${TIMESTAMP}.tar.gz.gpg" 2>/dev/null \
-  || echo "⚠  Chiffrement des secrets échoué (gpg requis) — backup secrets ignoré"
-
-# ── Nettoyage des anciens backups ─────────────────────────────────────────
-echo "==> Nettoyage des backups de plus de ${RETENTION_DAYS} jours..."
-find "$BACKUP_DIR" -name "*.gz" -mtime +${RETENTION_DAYS} -delete
-find "$BACKUP_DIR" -name "*.dump" -mtime +${RETENTION_DAYS} -delete
-find "$BACKUP_DIR" -name "*.gpg" -mtime +${RETENTION_DAYS} -delete
-
-echo ""
-echo "✓ Backup terminé : $BACKUP_DIR"
-ls -lh "$BACKUP_DIR" | tail -5
-
-echo ""
-echo "RECOMMANDATION : synchronisez $BACKUP_DIR vers un stockage hors-site"
-echo "  (S3, Backblaze B2, etc.) — un backup local seul ne protège pas"
-echo "  contre la perte du serveur."
+# Nettoyage
+find "$BACKUP_DIR" -name "*.gz" -mtime +$KEEP_DAYS -delete 2>/dev/null || true
+find "$BACKUP_DIR" -name "*.enc" -mtime +$KEEP_DAYS -delete 2>/dev/null || true
+echo "  ✓ Nettoyage backups > ${KEEP_DAYS}j"
+echo "  Taille : $(du -sh $BACKUP_DIR | cut -f1)"
