@@ -6,7 +6,6 @@ import asyncio
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 import time
 
@@ -52,11 +51,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# ── Security middleware ─────────────────────────────────────────────────────
-app.add_middleware(
-    TrustedHostMiddleware,
-    allowed_hosts=settings.ALLOWED_HOSTS,
-)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -67,7 +61,6 @@ app.add_middleware(
 app.add_middleware(RateLimitMiddleware)
 
 
-# ── Request timing ──────────────────────────────────────────────────────────
 @app.middleware("http")
 async def add_process_time_header(request, call_next):
     start = time.perf_counter()
@@ -76,7 +69,6 @@ async def add_process_time_header(request, call_next):
     return response
 
 
-# ── Routes ──────────────────────────────────────────────────────────────────
 app.include_router(api_router, prefix="/v1")
 
 
