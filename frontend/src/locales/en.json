@@ -1,0 +1,172 @@
+{
+  "meta": {
+    "title": "OpenProvena - Open standard for assessing information credibility",
+    "description": "Open source platform for information credibility analysis. Evaluate source reliability, detect fake news and track narratives.",
+    "keywords": "credibility, fake news, fact-checking, disinformation, verification, reliable sources"
+  },
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "explorer": "Explorer",
+    "dashboard": "Dashboard",
+    "about": "About",
+    "documentation": "Documentation",
+    "github": "GitHub",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Assess Information Credibility",
+    "subtitle": "OpenProvena is an open standard that helps you verify sources, analyze narratives, and detect disinformation.",
+    "search_placeholder": "Enter a URL, domain or keyword...",
+    "search_button": "Analyze",
+    "features_title": "Why use OpenProvena?",
+    "trust_analysis": "Trust Analysis",
+    "trust_analysis_desc": "Get a detailed trust score based on 50+ signals.",
+    "source_tracking": "Source Tracking",
+    "source_tracking_desc": "Explore relationships between domains, authors and organizations.",
+    "narrative_tracking": "Narrative Tracking",
+    "narrative_tracking_desc": "Detect and analyze the spread of online narratives.",
+    "ai_detection": "AI Detection",
+    "ai_detection_desc": "Identify AI-generated content."
+  },
+  "search": {
+    "title": "Trust Search",
+    "subtitle": "Enter a URL or domain for a complete analysis",
+    "input_placeholder": "https://example.com or example.com",
+    "button": "Analyze",
+    "analyzing": "Analyzing...",
+    "results_title": "Analysis Results",
+    "no_results": "No results found",
+    "try_again": "Try again with different terms"
+  },
+  "results": {
+    "overall_score": "Overall Score",
+    "trust_level": "Trust Level",
+    "category": "Category",
+    "domain": "Domain",
+    "registered_date": "Registration Date",
+    "owner": "Owner",
+    "last_updated": "Last Updated",
+    "ai_generated_probability": "AI-Generated Content Probability",
+    "signals": "Detected Signals",
+    "explanation": "Explanation",
+    "recommendations": "Recommendations",
+    "related_sources": "Related Sources",
+    "historical_data": "Historical Data",
+    "view_details": "View Details",
+    "share_results": "Share Results",
+    "report_issue": "Report Issue"
+  },
+  "trust_levels": {
+    "very_high": "Very High",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "very_low": "Very Low",
+    "unknown": "Unknown"
+  },
+  "categories": {
+    "news": "News",
+    "blog": "Blog",
+    "government": "Government",
+    "educational": "Educational",
+    "corporate": "Corporate",
+    "social": "Social Network",
+    "forum": "Forum",
+    "other": "Other"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "overview": "Overview",
+    "recent_analyses": "Recent Analyses",
+    "trending_narratives": "Trending Narratives",
+    "top_sources": "Top Sources",
+    "statistics": "Statistics",
+    "total_analyses": "Total Analyses",
+    "avg_trust_score": "Average Score",
+    "sources_monitored": "Sources Monitored",
+    "active_users": "Active Users"
+  },
+  "explorer": {
+    "title": "Knowledge Explorer",
+    "subtitle": "Explore relationships between sources, authors and narratives",
+    "search_placeholder": "Search in graph...",
+    "zoom_in": "Zoom In",
+    "zoom_out": "Zoom Out",
+    "reset_view": "Reset View",
+    "filter": "Filter",
+    "node_types": {
+      "domain": "Domain",
+      "author": "Author",
+      "organization": "Organization",
+      "claim": "Claim",
+      "narrative": "Narrative"
+    }
+  },
+  "about": {
+    "title": "About OpenProvena",
+    "mission_title": "Our Mission",
+    "mission_text": "Combat disinformation and promote access to reliable and verifiable information.",
+    "how_works_title": "How It Works",
+    "transparency_title": "Transparency",
+    "transparency_text": "All our algorithms and data sources are open and verifiable.",
+    "community_title": "Community",
+    "community_text": "A project maintained by a global community of researchers and developers.",
+    "open_source_title": "Open Source",
+    "open_source_text": "Source code available under MIT license for inspection and contribution.",
+    "contact_title": "Contact Us",
+    "contact_email": "contact@openprovena.org"
+  },
+  "footer": {
+    "tagline": "An open standard for assessing information credibility.",
+    "links": "Links",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms of Service",
+    "copyright": "© 2024 OpenProvena. All rights reserved.",
+    "open_source_notice": "Open source project under MIT license."
+  },
+  "errors": {
+    "invalid_url": "Invalid URL or domain",
+    "network_error": "Connection error. Please try again.",
+    "server_error": "Server error. Please try again later.",
+    "rate_limit": "Too many requests. Please wait.",
+    "not_found": "Result not found",
+    "timeout": "Request timed out. Please try again."
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "copy": "Copy",
+    "share": "Share",
+    "download": "Download",
+    "refresh": "Refresh",
+    "more": "More",
+    "less": "Less",
+    "show_all": "Show All",
+    "hide_all": "Hide All",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "export": "Export",
+    "import": "Import",
+    "language": "Language",
+    "theme": "Theme",
+    "settings": "Settings",
+    "help": "Help",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "confirm": "Confirm"
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to main content",
+    "menu_toggle": "Toggle menu",
+    "language_selector": "Select language",
+    "close_dialog": "Close dialog"
+  }
+}

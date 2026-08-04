@@ -1,0 +1,405 @@
+/*
+ * OpenProvena - Styles globaux
+ * Thème clair, moderne et professionnel inspiré de NYT, Google, Apple et GitHub
+ */
+
+/* Tailwind - Directives de base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import de la police Inter depuis Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Variables CSS personnalisées */
+:root {
+  /* Couleurs principales */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-light: #dbeafe;
+  
+  /* Couleurs de confiance */
+  --trust-high: #10b981;
+  --trust-medium: #f59e0b;
+  --trust-low: #ef4444;
+  --trust-unknown: #6b7280;
+  
+  /* Espacements */
+  --spacing-section: 6rem;
+  --spacing-container: 1280px;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+  
+  /* Ombres */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Base layer - Styles fondamentaux */
+@layer base {
+  /* Reset et box-sizing */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  /* Root element */
+  html {
+    @apply scroll-smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Body */
+  body {
+    @apply bg-white text-secondary-900 font-sans;
+    @apply min-h-screen;
+    @apply transition-colors duration-200;
+  }
+  
+  /* Titres */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-secondary-900;
+    @apply tracking-tight;
+  }
+  
+  h1 { @apply text-4xl md:text-5xl; }
+  h2 { @apply text-3xl md:text-4xl; }
+  h3 { @apply text-2xl md:text-3xl; }
+  h4 { @apply text-xl md:text-2xl; }
+  h5 { @apply text-lg md:text-xl; }
+  h6 { @apply text-base md:text-lg; }
+  
+  /* Liens */
+  a {
+    @apply text-primary-600 hover:text-primary-700;
+    @apply transition-colors duration-150;
+  }
+  
+  /* Focus visible pour l'accessibilité */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+  }
+  
+  /* Sélection de texte */
+  ::selection {
+    @apply bg-primary-200 text-primary-900;
+  }
+}
+
+/* Components layer - Composants réutilisables */
+@layer components {
+  /* Bouton primaire */
+  .btn-primary {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3;
+    @apply bg-primary-600 text-white font-medium;
+    @apply rounded-lg;
+    @apply hover:bg-primary-700;
+    @apply focus:ring-4 focus:ring-primary-200;
+    @apply transition-all duration-200;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  /* Bouton secondaire */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3;
+    @apply bg-white text-secondary-700 font-medium;
+    @apply border border-secondary-300 rounded-lg;
+    @apply hover:bg-secondary-50 hover:border-secondary-400;
+    @apply focus:ring-4 focus:ring-secondary-100;
+    @apply transition-all duration-200;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  /* Bouton fantôme */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center;
+    @apply px-4 py-2;
+    @apply text-secondary-600 font-medium;
+    @apply rounded-lg;
+    @apply hover:bg-secondary-100 hover:text-secondary-900;
+    @apply transition-all duration-200;
+  }
+  
+  /* Card principale */
+  .card {
+    @apply bg-white rounded-xl;
+    @apply border border-secondary-200;
+    @apply shadow-sm hover:shadow-md;
+    @apply transition-shadow duration-200;
+  }
+  
+  /* Card elevated */
+  .card-elevated {
+    @apply bg-white rounded-xl;
+    @apply shadow-elevated;
+  }
+  
+  /* Input field */
+  .input-field {
+    @apply w-full px-4 py-3;
+    @apply bg-white text-secondary-900;
+    @apply border border-secondary-300 rounded-lg;
+    @apply placeholder:text-secondary-400;
+    @apply focus:border-primary-500 focus:ring-2 focus:ring-primary-100;
+    @apply transition-all duration-200;
+  }
+  
+  /* Badge de confiance */
+  .trust-badge {
+    @apply inline-flex items-center gap-2;
+    @apply px-3 py-1.5 rounded-full;
+    @apply text-sm font-medium;
+  }
+  
+  .trust-badge-high {
+    @apply bg-emerald-50 text-emerald-700 border border-emerald-200;
+  }
+  
+  .trust-badge-medium {
+    @apply bg-amber-50 text-amber-700 border border-amber-200;
+  }
+  
+  .trust-badge-low {
+    @apply bg-red-50 text-red-700 border border-red-200;
+  }
+  
+  .trust-badge-unknown {
+    @apply bg-secondary-100 text-secondary-600 border border-secondary-200;
+  }
+  
+  /* Indicateur de score */
+  .score-indicator {
+    @apply relative inline-flex items-center justify-center;
+    @apply w-16 h-16 rounded-full;
+    @apply font-bold text-lg;
+  }
+  
+  /* Barre de progression */
+  .progress-bar {
+    @apply h-2 bg-secondary-200 rounded-full overflow-hidden;
+  }
+  
+  .progress-bar-fill {
+    @apply h-full rounded-full transition-all duration-500;
+  }
+  
+  /* Container centré */
+  .container-main {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Section spacing */
+  .section {
+    @apply py-16 md:py-24;
+  }
+  
+  /* Grid responsive */
+  .grid-cards {
+    @apply grid gap-6;
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  /* Navigation link */
+  .nav-link {
+    @apply px-4 py-2;
+    @apply text-secondary-600 font-medium;
+    @apply rounded-lg;
+    @apply hover:bg-secondary-100 hover:text-secondary-900;
+    @apply transition-colors duration-150;
+  }
+  
+  .nav-link-active {
+    @apply bg-primary-50 text-primary-700;
+    @apply hover:bg-primary-100 hover:text-primary-800;
+  }
+  
+  /* Sélecteur de langue */
+  .lang-selector {
+    @apply relative inline-block;
+  }
+  
+  .lang-dropdown {
+    @apply absolute right-0 mt-2 w-40;
+    @apply bg-white rounded-lg shadow-lg;
+    @apply border border-secondary-200;
+    @apply py-2;
+    @apply z-50;
+  }
+  
+  .lang-option {
+    @apply flex items-center gap-3;
+    @apply w-full px-4 py-2;
+    @apply text-secondary-700 hover:bg-secondary-50;
+    @apply transition-colors duration-150;
+  }
+  
+  /* Tooltip */
+  .tooltip {
+    @apply relative inline-block;
+  }
+  
+  .tooltip-content {
+    @apply absolute z-50 px-3 py-2;
+    @apply bg-secondary-900 text-white text-sm;
+    @apply rounded-lg shadow-lg;
+    @apply invisible opacity-0;
+    @apply transition-all duration-200;
+    @apply whitespace-nowrap;
+  }
+  
+  .tooltip:hover .tooltip-content {
+    @apply visible opacity-100;
+  }
+  
+  /* Loading skeleton */
+  .skeleton {
+    @apply bg-secondary-200 rounded animate-pulse;
+  }
+  
+  /* Tableau moderne */
+  .table-modern {
+    @apply w-full;
+    @apply divide-y divide-secondary-200;
+  }
+  
+  .table-modern thead {
+    @apply bg-secondary-50;
+  }
+  
+  .table-modern th {
+    @apply px-6 py-3;
+    @apply text-left text-xs font-semibold text-secondary-600 uppercase tracking-wider;
+  }
+  
+  .table-modern td {
+    @apply px-6 py-4;
+    @apply text-secondary-700;
+  }
+  
+  .table-modern tbody tr {
+    @apply hover:bg-secondary-50;
+    @apply transition-colors duration-150;
+  }
+}
+
+/* Utilities layer - Classes utilitaires personnalisées */
+@layer utilities {
+  /* Gradient de confiance */
+  .gradient-trust {
+    background: linear-gradient(135deg, var(--trust-high) 0%, var(--trust-medium) 100%);
+  }
+  
+  /* Texte avec ombre */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  }
+  
+  /* Ligne horizontale décorative */
+  .divider-gradient {
+    @apply h-1 w-24 bg-gradient-to-r from-primary-500 to-primary-700 rounded-full;
+  }
+  
+  /* Masquer scrollbar mais garder la fonctionnalité */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Scroll snap pour carrousels */
+  .snap-x {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .snap-start {
+    scroll-snap-align: start;
+  }
+  
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md;
+    @apply border border-white/20;
+  }
+  
+  /* Texte tronqué avec ellipsis */
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Animations personnalisées */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary-200) 25%,
+    var(--color-secondary-100) 50%,
+    var(--color-secondary-200) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* Styles pour le graphe de connaissances */
+.graph-container {
+  @apply w-full h-full min-h-[400px];
+  @apply bg-secondary-50 rounded-xl;
+  @apply border border-secondary-200;
+}
+
+.graph-node {
+  @apply cursor-pointer;
+  @apply transition-all duration-200;
+}
+
+.graph-node:hover {
+  transform: scale(1.1);
+}
+
+/* Styles pour les scores de confiance */
+.trust-score-0-20 { @apply bg-red-100 text-red-800 border-red-300; }
+.trust-score-21-40 { @apply bg-orange-100 text-orange-800 border-orange-300; }
+.trust-score-41-60 { @apply bg-yellow-100 text-yellow-800 border-yellow-300; }
+.trust-score-61-80 { @apply bg-lime-100 text-lime-800 border-lime-300; }
+.trust-score-81-100 { @apply bg-emerald-100 text-emerald-800 border-emerald-300; }
+
+/* Media queries personnalisées */
+@media (max-width: 640px) {
+  .section {
+    @apply py-12;
+  }
+  
+  h1 { @apply text-3xl; }
+  h2 { @apply text-2xl; }
+  h3 { @apply text-xl; }
+}

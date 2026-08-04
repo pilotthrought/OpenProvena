@@ -1,0 +1,172 @@
+{
+  "meta": {
+    "title": "OpenProvena - Standard ouvert pour évaluer la crédibilité de l'information",
+    "description": "Plateforme open source d'analyse de la crédibilité de l'information. Évaluez la fiabilité des sources, détectez les fake news et suivez les narratifs.",
+    "keywords": "crédibilité, fake news, fact-checking, désinformation, vérification, sources fiables"
+  },
+  "nav": {
+    "home": "Accueil",
+    "search": "Rechercher",
+    "explorer": "Explorer",
+    "dashboard": "Tableau de bord",
+    "about": "À propos",
+    "documentation": "Documentation",
+    "github": "GitHub",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Évaluez la crédibilité de l'information",
+    "subtitle": "OpenProvena est un standard ouvert qui vous aide à vérifier les sources, analyser les narratifs et détecter la désinformation.",
+    "search_placeholder": "Entrez une URL, un domaine ou un mot-clé...",
+    "search_button": "Analyser",
+    "features_title": "Pourquoi utiliser OpenProvena ?",
+    "trust_analysis": "Analyse de confiance",
+    "trust_analysis_desc": "Obtenez un score de confiance détaillé basé sur plus de 50 signaux.",
+    "source_tracking": "Suivi des sources",
+    "source_tracking_desc": "Explorez les relations entre domaines, auteurs et organisations.",
+    "narrative_tracking": "Suivi des narratifs",
+    "narrative_tracking_desc": "Détectez et analysez la propagation des narratifs en ligne.",
+    "ai_detection": "Détection IA",
+    "ai_detection_desc": "Identifiez le contenu généré par intelligence artificielle."
+  },
+  "search": {
+    "title": "Recherche de confiance",
+    "subtitle": "Entrez une URL ou un domaine pour obtenir une analyse complète",
+    "input_placeholder": "https://exemple.com ou exemple.com",
+    "button": "Analyser",
+    "analyzing": "Analyse en cours...",
+    "results_title": "Résultats de l'analyse",
+    "no_results": "Aucun résultat trouvé",
+    "try_again": "Réessayer avec d'autres termes"
+  },
+  "results": {
+    "overall_score": "Score global",
+    "trust_level": "Niveau de confiance",
+    "category": "Catégorie",
+    "domain": "Domaine",
+    "registered_date": "Date d'enregistrement",
+    "owner": "Propriétaire",
+    "last_updated": "Dernière mise à jour",
+    "ai_generated_probability": "Probabilité de contenu IA",
+    "signals": "Signaux détectés",
+    "explanation": "Explication",
+    "recommendations": "Recommandations",
+    "related_sources": "Sources connexes",
+    "historical_data": "Données historiques",
+    "view_details": "Voir les détails",
+    "share_results": "Partager les résultats",
+    "report_issue": "Signaler un problème"
+  },
+  "trust_levels": {
+    "very_high": "Très élevé",
+    "high": "Élevé",
+    "medium": "Moyen",
+    "low": "Faible",
+    "very_low": "Très faible",
+    "unknown": "Inconnu"
+  },
+  "categories": {
+    "news": "Actualités",
+    "blog": "Blog",
+    "government": "Gouvernement",
+    "educational": "Éducation",
+    "corporate": "Entreprise",
+    "social": "Réseau social",
+    "forum": "Forum",
+    "other": "Autre"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "overview": "Vue d'ensemble",
+    "recent_analyses": "Analyses récentes",
+    "trending_narratives": "Narratifs tendance",
+    "top_sources": "Sources principales",
+    "statistics": "Statistiques",
+    "total_analyses": "Analyses totales",
+    "avg_trust_score": "Score moyen",
+    "sources_monitored": "Sources suivies",
+    "active_users": "Utilisateurs actifs"
+  },
+  "explorer": {
+    "title": "Explorateur de connaissances",
+    "subtitle": "Explorez les relations entre sources, auteurs et narratifs",
+    "search_placeholder": "Rechercher dans le graphe...",
+    "zoom_in": "Zoom avant",
+    "zoom_out": "Zoom arrière",
+    "reset_view": "Réinitialiser la vue",
+    "filter": "Filtrer",
+    "node_types": {
+      "domain": "Domaine",
+      "author": "Auteur",
+      "organization": "Organisation",
+      "claim": "Affirmation",
+      "narrative": "Narratif"
+    }
+  },
+  "about": {
+    "title": "À propos d'OpenProvena",
+    "mission_title": "Notre mission",
+    "mission_text": "Combattre la désinformation et promouvoir l'accès à une information fiable et vérifiable.",
+    "how_works_title": "Comment ça marche",
+    "transparency_title": "Transparence",
+    "transparency_text": "Tous nos algorithmes et sources de données sont ouverts et vérifiables.",
+    "community_title": "Communauté",
+    "community_text": "Un projet maintenu par une communauté mondiale de chercheurs et développeurs.",
+    "open_source_title": "Open Source",
+    "open_source_text": "Code source disponible sous licence MIT pour inspection et contribution.",
+    "contact_title": "Contactez-nous",
+    "contact_email": "contact@openprovena.org"
+  },
+  "footer": {
+    "tagline": "Un standard ouvert pour évaluer la crédibilité de l'information.",
+    "links": "Liens",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation",
+    "copyright": "© 2024 OpenProvena. Tous droits réservés.",
+    "open_source_notice": "Projet open source sous licence MIT."
+  },
+  "errors": {
+    "invalid_url": "URL ou domaine invalide",
+    "network_error": "Erreur de connexion. Veuillez réessayer.",
+    "server_error": "Erreur serveur. Veuillez réessayer plus tard.",
+    "rate_limit": "Trop de requêtes. Veuillez patienter.",
+    "not_found": "Résultat non trouvé",
+    "timeout": "La requête a expiré. Veuillez réessayer."
+  },
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "copy": "Copier",
+    "share": "Partager",
+    "download": "Télécharger",
+    "refresh": "Actualiser",
+    "more": "Plus",
+    "less": "Moins",
+    "show_all": "Tout afficher",
+    "hide_all": "Tout masquer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "export": "Exporter",
+    "import": "Importer",
+    "language": "Langue",
+    "theme": "Thème",
+    "settings": "Paramètres",
+    "help": "Aide",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "submit": "Soumettre",
+    "reset": "Réinitialiser",
+    "confirm": "Confirmer"
+  },
+  "accessibility": {
+    "skip_to_content": "Aller au contenu principal",
+    "menu_toggle": "Basculer le menu",
+    "language_selector": "Sélectionner la langue",
+    "close_dialog": "Fermer la fenêtre"
+  }
+}

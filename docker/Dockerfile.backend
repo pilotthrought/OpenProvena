@@ -1,0 +1,90 @@
+# ============================================
+# OpenProvena Backend Dockerfile
+# Python FastAPI application
+# ============================================
+
+# Stage 1: Base
+FROM python:3.12-slim AS base
+
+# Met à jour et installe les dépendances système
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONFAULTHANDLER=1
+
+# Répertoire de travail
+WORKDIR /app
+
+# Stage 2: Dependencies
+FROM base AS deps
+
+# Copie les fichiers de dépendances
+COPY backend/requirements.txt .
+
+# Installe les dépendances Python
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip cache purge
+
+# Stage 3: Builder
+FROM base AS builder
+
+# Installe les dépendances de build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copie les dépendances
+COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=deps /usr/local/bin /usr/local/bin
+
+# Copie le code source
+COPY backend/ ./backend/
+
+# Stage 4: Production
+FROM base AS production
+
+# Crée un utilisateur non-root
+RUN groupadd --gid 1000 appgroup && \
+    useradd --uid 1000 --gid 1000 --shell /bin/bash appuser
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONFAULTHANDLER=1
+ENV PYTHONPATH=/app
+
+WORKDIR /app
+
+# Copie les dépendances et le code
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /app/backend ./backend
+
+# Structure l'application
+RUN mkdir -p /app/backend/app && \
+    mv /app/backend/* /app/backend/app/ 2>/dev/null || true
+
+# Change le propriétaire
+RUN chown -R appuser:appgroup /app
+
+# Utilisateur non-root
+USER appuser
+
+# Port d'exposition
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+
+# Commande de démarrage avec uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

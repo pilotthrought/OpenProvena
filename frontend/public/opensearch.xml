@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>OpenProvena Search</ShortName>
+  <Description>Search and analyze information credibility with OpenProvena</Description>
+  <Url type="text/html" template="https://openprovena.org/search?q={searchTerms}"/>
+  <Url type="application/x-suggestions+json" template="https://openprovena.org/api/v1/search/suggest?q={searchTerms}"/>
+  <Query role="example" searchTerms="lemonde.fr"/>
+  <Attribution>OpenProvena</Attribution>
+  <SyndicationRight>open</SyndicationRight>
+  <AdultContent>false</AdultContent>
+  <Language>fr-*</Language>
+  <OutputEncoding>UTF-8</OutputEncoding>
+  <InputEncoding>UTF-8</InputEncoding>
+</OpenSearchDescription>

@@ -1,0 +1,65 @@
+# ============================================
+# OpenProvena Frontend Dockerfile
+# Next.js application with Node.js
+# ============================================
+
+# Utilise l'image Node.js LTS comme base
+FROM node:20-alpine AS base
+
+# Stage 1: Dependencies
+FROM base AS deps
+WORKDIR /app
+
+# Copie les fichiers de dépendances
+COPY frontend/package.json frontend/package-lock.json* ./
+
+# Installe les dépendances
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Stage 2: Builder
+FROM base AS builder
+WORKDIR /app
+
+# Copie les dépendances
+COPY --from=deps /app/node_modules ./node_modules
+COPY frontend/ ./
+
+# Variables d'environnement pour le build
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+# Build de l'application
+RUN npm run build
+
+# Stage 3: Runner
+FROM base AS runner
+WORKDIR /app
+
+# Utilisateur non-root pour la sécurité
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copie les fichiers buildés
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copie les fichiers statiques
+COPY --from=builder /app/public ./public
+
+# Utilisateur non-root
+USER nextjs
+
+# Port d'exposition
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1
+
+# Commande de démarrage
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+CMD ["node", "server.js"]
