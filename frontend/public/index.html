@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenProvena - Standard ouvert pour évaluer la crédibilité de l'information</title>
+    <meta name="description" content="Plateforme open source d'analyse de la crédibilité de l'information. Évaluez la fiabilité des sources, détectez les fake news et suivez les narratifs.">
+    <meta name="keywords" content="crédibilité, fake news, fact-checking, désinformation, vérification, sources fiables">
+    <meta name="author" content="OpenProvena">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="OpenProvena - Standard ouvert pour évaluer la crédibilité de l'information">
+    <meta property="og:description" content="Plateforme open source d'analyse de la crédibilité de l'information.">
+    <meta property="og:url" content="https://openprovena.org">
+    <meta property="og:site_name" content="OpenProvena">
+    <meta property="og:locale" content="fr_FR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@openprovena">
+    <meta name="twitter:title" content="OpenProvena">
+    <meta name="twitter:description" content="Standard ouvert pour évaluer la crédibilité de l'information.">
+    
+    <!-- Theme -->
+    <meta name="theme-color" content="#2563eb">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           CSS Variables & Reset
+           ============================================ */
+        :root {
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --secondary-50: #f9fafb;
+            --secondary-100: #f3f4f6;
+            --secondary-200: #e5e7eb;
+            --secondary-300: #d1d5db;
+            --secondary-400: #9ca3af;
+            --secondary-500: #6b7280;
+            --secondary-600: #4b5563;
+            --secondary-700: #374151;
+            --secondary-800: #1f2937;
+            --secondary-900: #111827;
+            --emerald-500: #10b981;
+            --emerald-100: #d1fae5;
+            --emerald-50: #ecfdf5;
+            --amber-500: #f59e0b;
+            --amber-100: #fef3c7;
+            --red-500: #ef4444;
+            --red-100: #fee2e2;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: white;
+            color: var(--secondary-900);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================
+           Layout
+           ============================================ */
+        .container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .container-main {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* ============================================
+           Header
+           ============================================ */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--secondary-200);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--secondary-900);
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.2s;
+        }
+
+        .logo:hover .logo-icon {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo-icon svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: white;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: var(--secondary-500);
+            display: none;
+        }
+
+        @media (min-width: 640px) {
+            .logo-subtitle {
+                display: block;
+            }
+        }
+
+        .nav-desktop {
+            display: none;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        @media (min-width: 768px) {
+            .nav-desktop {
+                display: flex;
+            }
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: var(--secondary-600);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.15s;
+        }
+
+        .nav-link:hover {
+            background-color: var(--secondary-100);
+            color: var(--secondary-900);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lang-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+
+        .lang-button:hover {
+            background-color: var(--secondary-100);
+        }
+
+        .lang-flag {
+            font-size: 1.25rem;
+        }
+
+        .lang-code {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--secondary-700);
+            text-transform: uppercase;
+        }
+
+        .github-link {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            color: var(--secondary-700);
+            text-decoration: none;
+            transition: background-color 0.15s;
+        }
+
+        @media (min-width: 640px) {
+            .github-link {
+                display: flex;
+            }
+        }
+
+        .github-link:hover {
+            background-color: var(--secondary-100);
+        }
+
+        .github-link svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        /* ============================================
+           Hero Section
+           ============================================ */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to bottom, var(--primary-50), white, white);
+            padding: 5rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .hero {
+                padding: 8rem 0;
+            }
+        }
+
+        .hero-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 9999px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-200);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--secondary-700);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: var(--emerald-500);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--secondary-900);
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero-title {
+                font-size: 3.75rem;
+            }
+        }
+
+        .hero-title-accent {
+            color: var(--primary-600);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--secondary-600);
+            max-width: 48rem;
+            margin: 0 auto 3rem;
+            line-height: 1.75;
+        }
+
+        @media (min-width: 768px) {
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ============================================
+           Search Box
+           ============================================ */
+        .search-container {
+            max-width: 48rem;
+            margin: 0 auto 4rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 1.5rem;
+            border: 2px solid var(--secondary-200);
+            box-shadow: var(--shadow-lg);
+            padding: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), var(--shadow-lg);
+        }
+
+        .search-icon {
+            padding-left: 1.25rem;
+            color: var(--secondary-400);
+            flex-shrink: 0;
+        }
+
+        .search-icon svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1.25rem 1rem;
+            font-size: 1.125rem;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--secondary-900);
+        }
+
+        .search-input::placeholder {
+            color: var(--secondary-400);
+        }
+
+        .search-button {
+            margin: 0.25rem;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-600);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: var(--primary-700);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-button:active {
+            transform: scale(0.98);
+        }
+
+        .search-hints {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--secondary-500);
+        }
+
+        .search-hint {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .search-hint svg {
+            width: 1rem;
+            height: 1rem;
+            color: var(--emerald-500);
+        }
+
+        /* ============================================
+           Demo Scores
+           ============================================ */
+        .demo-scores {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .demo-scores {
+                gap: 3rem;
+            }
+        }
+
+        .demo-score-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-100);
+        }
+
+        .score-circle {
+            position: relative;
+            width: 3.75rem;
+            height: 3.75rem;
+        }
+
+        .score-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-circle-bg {
+            fill: none;
+            stroke: var(--secondary-200);
+            stroke-width: 4;
+        }
+
+        .score-circle-fill {
+            fill: none;
+            stroke: var(--emerald-500);
+            stroke-width: 4;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .score-circle-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-value {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--secondary-900);
+        }
+
+        .score-label {
+            font-size: 0.625rem;
+            color: var(--secondary-500);
+        }
+
+        .demo-score-info p:first-child {
+            font-weight: 500;
+            color: var(--secondary-900);
+        }
+
+        .demo-score-info p:last-child {
+            font-size: 0.75rem;
+            color: var(--secondary-500);
+        }
+
+        /* ============================================
+           Features Section
+           ============================================ */
+        .features {
+            padding: 5rem 0;
+            background-color: var(--secondary-50);
+        }
+
+        @media (min-width: 768px) {
+            .features {
+                padding: 5rem 0;
+            }
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-900);
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 2.25rem;
+            }
+        }
+
+        .section-divider {
+            width: 6rem;
+            height: 0.25rem;
+            background: linear-gradient(to right, var(--primary-500), var(--primary-700));
+            border-radius: 9999px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--secondary-600);
+            max-width: 42rem;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 640px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(135deg, var(--primary-100), var(--primary-50));
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-600);
+            margin-bottom: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: linear-gradient(135deg, var(--primary-200), var(--primary-100));
+        }
+
+        .feature-icon svg {
+            width: 1.75rem;
+            height: 1.75rem;
+        }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--secondary-900);
+            margin-bottom: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .feature-card:hover .feature-title {
+            color: var(--primary-700);
+        }
+
+        .feature-description {
+            color: var(--secondary-600);
+            line-height: 1.625;
+        }
+
+        .feature-link {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary-600);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .feature-card:hover .feature-link {
+            opacity: 1;
+        }
+
+        .feature-link svg {
+            width: 1rem;
+            height: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover .feature-link svg {
+            transform: translateX(0.25rem);
+        }
+
+        /* ============================================
+           How It Works Section
+           ============================================ */
+        .how-it-works {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .steps-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .steps-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 4rem;
+            height: 4rem;
+            margin: 0 auto 1.5rem;
+            background-color: var(--primary-100);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-600);
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary-900);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-description {
+            color: var(--secondary-600);
+        }
+
+        /* ============================================
+           CTA Section
+           ============================================ */
+        .cta {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+
+        .cta-content {
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .cta-title {
+                font-size: 2.25rem;
+            }
+        }
+
+        .cta-subtitle {
+            font-size: 1.125rem;
+            color: var(--primary-100);
+            max-width: 42rem;
+            margin: 0 auto 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-700);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-50);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: var(--primary-800);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-900);
+        }
+
+        .btn svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        /* ============================================
+           Open Source Section
+           ============================================ */
+        .opensource {
+            padding: 5rem 0;
+            background: var(--secondary-900);
+            color: white;
+        }
+
+        .opensource-grid {
+            display: grid;
+            gap: 3rem;
+            grid-template-columns: 1fr;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .opensource-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .opensource-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .opensource-text {
+            color: var(--secondary-300);
+            margin-bottom: 1.5rem;
+            line-height: 1.75;
+        }
+
+        .opensource-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .opensource-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .opensource-list svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: var(--emerald-500);
+            flex-shrink: 0;
+        }
+
+        .code-block {
+            background: var(--secondary-800);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 28rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .code-header svg {
+            width: 2rem;
+            height: 2rem;
+            color: white;
+        }
+
+        .code-header span {
+            font-family: monospace;
+            color: var(--secondary-300);
+        }
+
+        .code-content {
+            background: var(--secondary-900);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: var(--emerald-500);
+            overflow-x: auto;
+        }
+
+        /* ============================================
+           Footer
+           ============================================ */
+        footer {
+            background: var(--secondary-900);
+            color: var(--secondary-300);
+        }
+
+        .footer-main {
+            padding: 4rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            gap: 3rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+            }
+        }
+
+        .footer-brand p {
+            color: var(--secondary-400);
+            margin-bottom: 1.5rem;
+            line-height: 1.75;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: var(--secondary-400);
+            transition: color 0.15s;
+        }
+
+        .social-links a:hover {
+            color: white;
+        }
+
+        .social-links svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .footer-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--secondary-400);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--secondary-800);
+            padding: 1.5rem 0;
+        }
+
+        .footer-bottom-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom-content {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .footer-copyright {
+            font-size: 0.875rem;
+            color: var(--secondary-500);
+        }
+
+        .footer-notice {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--secondary-500);
+        }
+
+        .footer-notice svg {
+            width: 1rem;
+            height: 1rem;
+            color: var(--emerald-500);
+        }
+
+        /* ============================================
+           Animations
+           ============================================ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to content -->
+    <a href="#main-content" class="sr-only" style="position:absolute;left:-9999px">Aller au contenu principal</a>
+
+    <!-- Header -->
+    <header>
+        <div class="container-main header-content">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">OpenProvena</span>
+                    <span class="logo-subtitle">Standard ouvert pour évaluer la crédibilité de l'information</span>
+                </div>
+            </a>
+
+            <nav class="nav-desktop">
+                <a href="/" class="nav-link">Accueil</a>
+                <a href="/search" class="nav-link">Rechercher</a>
+                <a href="/explorer" class="nav-link">Explorer</a>
+                <a href="/dashboard" class="nav-link">Tableau de bord</a>
+                <a href="/about" class="nav-link">À propos</a>
+            </nav>
+
+            <div class="header-actions">
+                <div class="lang-selector">
+                    <button class="lang-button" aria-label="Sélectionner la langue">
+                        <span class="lang-flag">🇫🇷</span>
+                        <span class="lang-code">fr</span>
+                        <svg width="1rem" height="1rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <a href="https://github.com/openprovena/openprovena" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-pattern">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs>
+                        <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#e5e7eb" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100" height="100" fill="url(#grid)" />
+                </svg>
+            </div>
+
+            <div class="container-main hero-content">
+                <!-- Badge -->
+                <span class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    Plateforme Open Source
+                </span>
+
+                <!-- Title -->
+                <h1 class="hero-title">
+                    Évaluez la crédibilité de <span class="hero-title-accent">l'information</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="hero-subtitle">
+                    OpenProvena est un standard ouvert qui vous aide à vérifier les sources, analyser les narratifs et détecter la désinformation.
+                </p>
+
+                <!-- Search Box -->
+                <div class="search-container">
+                    <form class="search-box" action="/search" method="GET">
+                        <div class="search-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" name="q" class="search-input" placeholder="Entrez une URL, un domaine ou un mot-clé..." aria-label="Recherche de confiance">
+                        <button type="submit" class="search-button">Analyser</button>
+                    </form>
+
+                    <div class="search-hints">
+                        <span class="search-hint">
+                            <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            URL
+                        </span>
+                        <span class="search-hint">
+                            <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Domaine
+                        </span>
+                        <span class="search-hint">
+                            <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            HTTPS
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Demo Scores -->
+                <div class="demo-scores">
+                    <div class="demo-score-item">
+                        <div class="score-circle">
+                            <svg width="60" height="60" viewBox="0 0 60 60">
+                                <circle class="score-circle-bg" cx="30" cy="30" r="28"></circle>
+                                <circle class="score-circle-fill" cx="30" cy="30" r="28" stroke-dasharray="175.93" stroke-dashoffset="26.39"></circle>
+                            </svg>
+                            <div class="score-circle-text">
+                                <span class="score-value">85</span>
+                                <span class="score-label">/ 100</span>
+                            </div>
+                        </div>
+                        <div class="demo-score-info">
+                            <p>lemonde.fr</p>
+                            <p>Score: 85/100</p>
+                        </div>
+                    </div>
+
+                    <div class="demo-score-item">
+                        <div class="score-circle">
+                            <svg width="60" height="60" viewBox="0 0 60 60">
+                                <circle class="score-circle-bg" cx="30" cy="30" r="28"></circle>
+                                <circle class="score-circle-fill" cx="30" cy="30" r="28" stroke-dasharray="175.93" stroke-dashoffset="14.07"></circle>
+                            </svg>
+                            <div class="score-circle-text">
+                                <span class="score-value">92</span>
+                                <span class="score-label">/ 100</span>
+                            </div>
+                        </div>
+                        <div class="demo-score-info">
+                            <p>wikipedia.org</p>
+                            <p>Score: 92/100</p>
+                        </div>
+                    </div>
+
+                    <div class="demo-score-item">
+                        <div class="score-circle">
+                            <svg width="60" height="60" viewBox="0 0 60 60">
+                                <circle class="score-circle-bg" cx="30" cy="30" r="28"></circle>
+                                <circle class="score-circle-fill" cx="30" cy="30" r="28" stroke-dasharray="175.93" stroke-dashoffset="97.26" style="stroke: var(--amber-500);"></circle>
+                            </svg>
+                            <div class="score-circle-text">
+                                <span class="score-value">45</span>
+                                <span class="score-label">/ 100</span>
+                            </div>
+                        </div>
+                        <div class="demo-score-info">
+                            <p>twitter.com</p>
+                            <p>Score: 45/100</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container-main">
+                <div class="section-header">
+                    <h2 class="section-title">Pourquoi utiliser OpenProvena ?</h2>
+                    <div class="section-divider"></div>
+                    <p class="section-subtitle">
+                        Des outils puissants pour analyser et comprendre la crédibilité de l'information
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <!-- Feature 1 -->
+                    <a href="/search" class="feature-card">
+                        <div class="feature-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Analyse de confiance</h3>
+                        <p class="feature-description">Obtenez un score de confiance détaillé basé sur plus de 50 signaux.</p>
+                        <span class="feature-link">
+                            En savoir plus
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </span>
+                    </a>
+
+                    <!-- Feature 2 -->
+                    <a href="/explorer" class="feature-card">
+                        <div class="feature-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Suivi des sources</h3>
+                        <p class="feature-description">Explorez les relations entre domaines, auteurs et organisations.</p>
+                        <span class="feature-link">
+                            En savoir plus
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </span>
+                    </a>
+
+                    <!-- Feature 3 -->
+                    <a href="/explorer?view=narratives" class="feature-card">
+                        <div class="feature-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Suivi des narratifs</h3>
+                        <p class="feature-description">Détectez et analysez la propagation des narratifs en ligne.</p>
+                        <span class="feature-link">
+                            En savoir plus
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </span>
+                    </a>
+
+                    <!-- Feature 4 -->
+                    <a href="/docs/ai-detection" class="feature-card">
+                        <div class="feature-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Détection IA</h3>
+                        <p class="feature-description">Identifiez le contenu généré par intelligence artificielle.</p>
+                        <span class="feature-link">
+                            En savoir plus
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works">
+            <div class="container-main">
+                <div class="section-header">
+                    <h2 class="section-title">Comment ça marche ?</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Saisissez une URL</h3>
+                        <p class="step-description">Entrez l'adresse du site ou de l'article que vous souhaitez analyser</p>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Analyse automatique</h3>
+                        <p class="step-description">Notre système examine plus de 50 signaux de confiance en temps réel</p>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Résultat transparent</h3>
+                        <p class="step-description">Obtenez un score détaillé avec des explications claires et des sources</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container-main cta-content">
+                <h2 class="cta-title">Prêt à vérifier vos sources ?</h2>
+                <p class="cta-subtitle">
+                    Rejoignez des milliers d'utilisateurs qui font confiance à OpenProvena pour évaluer l'information
+                </p>
+                <div class="cta-buttons">
+                    <a href="/search" class="btn btn-primary">Commencer maintenant</a>
+                    <a href="https://github.com/openprovena/openprovena" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                        </svg>
+                        Voir sur GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open Source Section -->
+        <section class="opensource">
+            <div class="container-main">
+                <div class="opensource-grid">
+                    <div>
+                        <h2 class="opensource-title">100% Open Source</h2>
+                        <p class="opensource-text">
+                            OpenProvena est un projet communautaire maintenu par des chercheurs et développeurs du monde entier. 
+                            Tout le code est disponible, audité et contribue à l'amélioration de la transparence de l'information.
+                        </p>
+                        <ul class="opensource-list">
+                            <li>
+                                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <span>Code source sous licence MIT</span>
+                            </li>
+                            <li>
+                                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <span>Algorithmes transparents et documentés</span>
+                            </li>
+                            <li>
+                                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <span>Contributions communautaires bienvenues</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                                </svg>
+                                <span>openprovena</span>
+                            </div>
+                            <pre class="code-content">git clone https://github.com/
+  openprovena/openprovena
+
+cd openprovena
+docker-compose up</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-main">
+            <div class="container-main">
+                <div class="footer-grid">
+                    <!-- Brand Column -->
+                    <div class="footer-brand">
+                        <a href="/" class="logo" style="margin-bottom: 1rem; display: inline-flex;">
+                            <div class="logo-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+                            </div>
+                            <span class="logo-title" style="color: white;">OpenProvena</span>
+                        </a>
+                        <p>Un standard ouvert pour évaluer la crédibilité de l'information.</p>
+                        <div class="social-links">
+                            <a href="https://github.com/openprovena/openprovena" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                                </svg>
+                            </a>
+                            <a href="https://twitter.com/openprovena" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                                </svg>
+                            </a>
+                            <a href="https://linkedin.com/company/openprovena" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Links Column -->
+                    <div>
+                        <h4 class="footer-title">Liens</h4>
+                        <ul class="footer-links">
+                            <li><a href="/">Accueil</a></li>
+                            <li><a href="/search">Rechercher</a></li>
+                            <li><a href="/explorer">Explorer</a></li>
+                            <li><a href="/dashboard">Tableau de bord</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Resources Column -->
+                    <div>
+                        <h4 class="footer-title">Documentation</h4>
+                        <ul class="footer-links">
+                            <li><a href="/about">À propos</a></li>
+                            <li><a href="/docs">Documentation</a></li>
+                            <li><a href="https://github.com/openprovena/openprovena" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Legal Column -->
+                    <div>
+                        <h4 class="footer-title">Mentions légales</h4>
+                        <ul class="footer-links">
+                            <li><a href="/legal">Mentions légales</a></li>
+                            <li><a href="/privacy">Confidentialité</a></li>
+                            <li><a href="/terms">Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container-main">
+                <div class="footer-bottom-content">
+                    <p class="footer-copyright">© 2024 OpenProvena. Tous droits réservés.</p>
+                    <p class="footer-notice">
+                        Projet open source sous licence MIT.
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
