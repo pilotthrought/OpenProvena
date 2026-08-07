@@ -4,6 +4,9 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Output standalone pour Docker
+  output: 'standalone',
+
   // Activation du support i18n pour FR/EN
   i18n: {
     locales: ['fr', 'en'],
