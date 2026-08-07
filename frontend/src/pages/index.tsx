@@ -239,7 +239,7 @@ export default function HomePage() {
               Commencer maintenant
             </button>
             <a
-              href="https://github.com/openprovena/openprovena"
+              href="https://github.com/pilotthrought/OpenProvena"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-primary-800 text-white font-semibold rounded-xl hover:bg-primary-900 transition-colors duration-200 flex items-center gap-2"
