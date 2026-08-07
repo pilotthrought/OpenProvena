@@ -3,8 +3,6 @@
 # Configuration complète de l'infrastructure
 # ============================================
 
-version: '3.9'
-
 # Services principaux
 services:
   # ==========================================
@@ -173,7 +171,6 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.backend
-    container_name: openprovena-celery
     command: celery -A app.celery_app worker --loglevel=info --concurrency=4
     environment:
       - PYTHONUNBUFFERED=1
