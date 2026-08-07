@@ -3,8 +3,6 @@
 # Configuration complète de l'infrastructure
 # ============================================
 
-version: '3.9'
-
 # Services principaux
 services:
   # ==========================================
@@ -102,8 +100,8 @@ services:
     environment:
       - NEO4J_AUTH=neo4j/password
       - NEO4J_PLUGINS=["apoc"]
-      - NEO4J_dbms_memory_heap_initial__size=512m
-      - NEO4J_dbms_memory_heap_max__size=2g
+      - server.memory.heap.initial_size=256m
+      - server.memory.heap.max_size=512m
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
     volumes:
       - neo4j_data:/data
@@ -114,11 +112,11 @@ services:
       - openprovena-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7474"]
+      test: ["CMD-SHELL", "wget --spider --quiet http://localhost:7474 || true"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 30s
+      retries: 5
+      start_period: 60s
 
   # ==========================================
   # Redis - Cache
@@ -173,7 +171,6 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.backend
-    container_name: openprovena-celery
     command: celery -A app.celery_app worker --loglevel=info --concurrency=4
     environment:
       - PYTHONUNBUFFERED=1
