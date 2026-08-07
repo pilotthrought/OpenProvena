@@ -12,21 +12,21 @@ module.exports = {
   // Thème par défaut
   theme: {
     extend: {
-      // Palette de couleurs professionnelle
+      // Palette de couleurs professionnelle - Bleu OpenProvena
       colors: {
-        // Couleurs principales - bleu confiance
+        // Couleurs principales - bleu confiance #2557B8
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#f0f5fc',
+          100: '#d9e4f5',
+          200: '#b3c9eb',
+          300: '#8daee1',
+          400: '#6793d7',
+          500: '#4178cd',
+          600: '#2557B8',  // Couleur principale
+          700: '#1e4a9e',
+          800: '#183d85',
+          900: '#12316c',
+          950: '#0c2552',
         },
         // Couleurs secondaires - gris sobre
         secondary: {
