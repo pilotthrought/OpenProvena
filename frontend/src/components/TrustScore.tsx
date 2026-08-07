@@ -33,9 +33,20 @@ function getTrustLevelClass(level: TrustLevel): string {
 }
 
 /**
- * Obtient la couleur de la barre de progression selon le score
+ * Obtient la couleur du stroke SVG selon le score
  */
 function getScoreColor(score: number): string {
+  if (score >= 80) return 'stroke-emerald-500';
+  if (score >= 60) return 'stroke-lime-500';
+  if (score >= 40) return 'stroke-yellow-500';
+  if (score >= 20) return 'stroke-orange-500';
+  return 'stroke-red-500';
+}
+
+/**
+ * Obtient la classe de couleur de fond pour les badges
+ */
+function getBadgeColor(score: number): string {
   if (score >= 80) return 'bg-emerald-500';
   if (score >= 60) return 'bg-lime-500';
   if (score >= 40) return 'bg-yellow-500';
@@ -153,7 +164,7 @@ export default function TrustScore({
         <div className={`trust-badge ${getTrustLevelClass(effectiveLevel)}`}>
           {/* Indicateur visuel */}
           <span 
-            className={`w-2 h-2 rounded-full ${getScoreColor(score)}`}
+            className={`w-2 h-2 rounded-full ${getBadgeColor(score)}`}
             aria-hidden="true"
           />
           <span>{levelLabel}</span>
@@ -206,7 +217,7 @@ export function TrustBar({ score, showLabel = true, label, size = 'md', classNam
       )}
       <div className={`progress-bar ${heightClasses[size]}`}>
         <div
-          className={`progress-bar-fill ${getScoreColor(score)}`}
+          className={`progress-bar-fill ${getBadgeColor(score)}`}
           style={{ width: `${Math.min(100, Math.max(0, score))}%` }}
           role="progressbar"
           aria-valuenow={score}
@@ -235,7 +246,7 @@ export function TrustBadge({ score, trustLevel, showScore = true, className = ''
   return (
     <div className={`trust-badge ${getTrustLevelClass(effectiveLevel)} ${className}`}>
       <span 
-        className={`w-2 h-2 rounded-full ${getScoreColor(score)}`}
+        className={`w-2 h-2 rounded-full ${getBadgeColor(score)}`}
         aria-hidden="true"
       />
       <span>{getTrustLevelTranslation({ trust_levels: useLanguage().t.trust_levels }, effectiveLevel)}</span>
