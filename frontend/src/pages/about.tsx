@@ -2,44 +2,9 @@
 // Présentation du projet OpenProvena
 
 import React from 'react';
-import Link from 'next/link';
 import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
-
-/**
- * Équipe fondatrice
- */
-const TEAM_MEMBERS = [
-  {
-    name: 'Dr. Marie Dubois',
-    role: 'Directrice de recherche',
-    bio: 'Experte en désinformation et médias numériques',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
-  },
-  {
-    name: 'Prof. Jean Martin',
-    role: 'Architecte technique',
-    bio: 'Spécialiste en systèmes d\'information et IA',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
-  },
-  {
-    name: 'Dr. Sophie Bernard',
-    role: 'Responsable IA/NLP',
-    bio: 'Rechercheuse en traitement du langage naturel',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
-  },
-];
-
-/**
- * Partenaires et sponsors
- */
-const PARTNERS = [
-  { name: 'CNRS', logo: '/logos/cnrs.svg' },
-  { name: 'Université Paris-Saclay', logo: '/logos/ups.svg' },
-  { name: 'INRIA', logo: '/logos/inria.svg' },
-  { name: 'European Research Council', logo: '/logos/erc.svg' },
-];
 
 /**
  * Page À propos
@@ -51,196 +16,186 @@ export default function AboutPage() {
     <Layout>
       <SEO 
         title={t.about.title}
-        description="Découvrez la mission et l'équipe derrière OpenProvena"
+        description="Découvrez la mission et le fonctionnement d'OpenProvena"
         canonical="/about"
       />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-primary-50 to-white py-20">
-        <div className="container-main text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">
+      <section className="bg-gradient-to-b from-primary-50 to-white py-16 md:py-24">
+        <div className="container-main">
+          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6 text-center">
             {t.about.title}
           </h1>
-          <p className="text-xl text-secondary-600 max-w-3xl mx-auto leading-relaxed">
-            OpenProvena est une infrastructure ouverte et communautaire dédiée à la lutte contre la désinformation 
-            et à la promotion de l'accès à une information fiable et vérifiable.
+          <p className="text-xl text-secondary-600 max-w-3xl mx-auto text-center leading-relaxed">
+            Un standard ouvert pour évaluer la crédibilité de l'information
           </p>
         </div>
       </section>
 
-      {/* Mission Section */}
-      <section className="py-20 bg-white">
-        <div className="container-main">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="inline-block px-4 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-4">
-                Notre mission
-              </span>
-              <h2 className="text-3xl font-bold text-secondary-900 mb-6">
-                Combattre la désinformation par la transparence
-              </h2>
-              <p className="text-secondary-600 leading-relaxed mb-6">
-                {t.about.mission_text}
-              </p>
-              <p className="text-secondary-600 leading-relaxed">
-                Dans un monde où l'information circule instantanément, il est crucial de disposer d'outils 
-                permettant de vérifier la crédibilité des sources. OpenProvena répond à ce besoin en fournissant 
-                une plateforme open source, transparente et accessible à tous.
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-8">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-primary-600 mb-2">50+</p>
-                  <p className="text-secondary-600 text-sm">Signaux analysés</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-primary-600 mb-2">10K+</p>
-                  <p className="text-secondary-600 text-sm">Utilisateurs actifs</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-primary-600 mb-2">1M+</p>
-                  <p className="text-secondary-600 text-sm">Analyses effectuées</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-primary-600 mb-2">100%</p>
-                  <p className="text-secondary-600 text-sm">Open Source</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Valeurs Section */}
-      <section className="py-20 bg-secondary-50">
-        <div className="container-main">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-secondary-900 mb-4">Nos valeurs</h2>
-            <div className="divider-gradient mx-auto"></div>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Transparence */}
-            <div className="bg-white rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 bg-emerald-100 rounded-2xl flex items-center justify-center">
-                <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-secondary-900 mb-3">
-                {t.about.transparency_title}
-              </h3>
-              <p className="text-secondary-600">
-                {t.about.transparency_text}
-              </p>
-            </div>
-
-            {/* Communauté */}
-            <div className="bg-white rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center">
-                <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-secondary-900 mb-3">
-                {t.about.community_title}
-              </h3>
-              <p className="text-secondary-600">
-                {t.about.community_text}
-              </p>
-            </div>
-
-            {/* Open Source */}
-            <div className="bg-white rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 bg-purple-100 rounded-2xl flex items-center justify-center">
-                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-secondary-900 mb-3">
-                {t.about.open_source_title}
-              </h3>
-              <p className="text-secondary-600">
-                {t.about.open_source_text}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Équipe Section */}
-      <section className="py-20 bg-white">
-        <div className="container-main">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-secondary-900 mb-4">Équipe fondatrice</h2>
-            <div className="divider-gradient mx-auto"></div>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {TEAM_MEMBERS.map((member) => (
-              <div key={member.name} className="text-center">
-                <img
-                  src={member.avatar}
-                  alt={member.name}
-                  className="w-32 h-32 mx-auto mb-4 rounded-full object-cover shadow-md"
-                />
-                <h3 className="text-lg font-semibold text-secondary-900">{member.name}</h3>
-                <p className="text-primary-600 text-sm mb-2">{member.role}</p>
-                <p className="text-secondary-600 text-sm">{member.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Partenaires Section */}
-      <section className="py-20 bg-secondary-50">
-        <div className="container-main">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-secondary-900 mb-4">Partenaires et sponsors</h2>
-            <p className="text-secondary-600">
-              OpenProvena est soutenu par des institutions académiques et de recherche de premier plan
+      {/* Problème Section */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="container-main max-w-4xl">
+          <div className="prose prose-lg max-w-none">
+            <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-8">
+              Le problème
+            </h2>
+            
+            <p className="text-secondary-600 mb-6 leading-relaxed">
+              Aujourd'hui, on peut facilement vérifier si une connexion Internet est sécurisée.
+              Mais, lorsqu'on lit un article, une réponse générée par une IA ou une publication sur un réseau social, 
+              il est souvent très difficile de savoir rapidement :
+            </p>
+            
+            <ul className="list-disc pl-6 mb-8 space-y-3 text-secondary-600">
+              <li>d'où vient l'information ;</li>
+              <li>quelles preuves la soutiennent ;</li>
+              <li>si elle a été modifiée ;</li>
+              <li>pourquoi on devrait lui faire confiance.</li>
+            </ul>
+            
+            <p className="text-secondary-600 mb-6 leading-relaxed">
+              On dispose d'outils pour sécuriser les communications.
+            </p>
+            
+            <p className="text-secondary-600 leading-relaxed font-semibold">
+              Beaucoup moins pour évaluer la confiance des informations elles-mêmes.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Solution Section */}
+      <section className="py-16 md:py-20 bg-secondary-50">
+        <div className="container-main max-w-4xl">
+          <div className="prose prose-lg max-w-none">
+            <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-8">
+              La solution : OpenProvena
+            </h2>
+            
+            <p className="text-secondary-600 mb-6 leading-relaxed">
+              C'est de cette réflexion qu'est né <strong className="text-primary-600">OpenProvena</strong>.
+            </p>
+            
+            <p className="text-secondary-600 mb-6 leading-relaxed">
+              L'idée est de construire un <strong>standard ouvert</strong> qui permette d'associer à une information :
+            </p>
+            
+            <ul className="list-disc pl-6 mb-8 space-y-3 text-secondary-600">
+              <li>sa <strong>provenance</strong> ;</li>
+              <li>les <strong>preuves</strong> qui l'accompagnent ;</li>
+              <li>différents <strong>indicateurs de confiance</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Principes Section */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="container-main max-w-4xl">
+          <div className="prose prose-lg max-w-none">
+            <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-8">
+              Nos principes
+            </h2>
+            
+            <div className="bg-primary-50 border-l-4 border-primary-600 p-6 rounded-r-lg mb-8">
+              <p className="text-secondary-700 leading-relaxed text-lg italic">
+                "L'objectif n'est pas de décider de ce qui est vrai ou faux. 
+                L'objectif est de donner à chacun les éléments nécessaires pour se faire son propre jugement."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Fonctionnement Section */}
+      <section className="py-16 md:py-20 bg-secondary-50">
+        <div className="container-main">
+          <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-12 text-center">
+            Comment ça marche ?
+          </h2>
           
-          <div className="flex flex-wrap justify-center items-center gap-12">
-            {PARTNERS.map((partner) => (
-              <div 
-                key={partner.name}
-                className="flex items-center gap-3 text-secondary-400 hover:text-secondary-600 transition-colors"
-              >
-                <div className="w-12 h-12 bg-secondary-200 rounded-lg flex items-center justify-center">
-                  <span className="text-xs font-bold">{partner.name.substring(0, 2)}</span>
-                </div>
-                <span className="font-medium">{partner.name}</span>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Fonctionnalité 1 */}
+            <div className="bg-white rounded-2xl p-8 shadow-md text-center">
+              <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center">
+                <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
-            ))}
+              <h3 className="text-xl font-semibold text-secondary-900 mb-3">Analyse</h3>
+              <p className="text-secondary-600">
+                Entrez une URL ou un domaine pour obtenir une analyse détaillée de sa crédibilité
+              </p>
+            </div>
+
+            {/* Fonctionnalité 2 */}
+            <div className="bg-white rounded-2xl p-8 shadow-md text-center">
+              <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center">
+                <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-secondary-900 mb-3">Signaux</h3>
+              <p className="text-secondary-600">
+                Plus de 50 signaux analysés : âge du domaine, qualité des citations, transparence, etc.
+              </p>
+            </div>
+
+            {/* Fonctionnalité 3 */}
+            <div className="bg-white rounded-2xl p-8 shadow-md text-center">
+              <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center">
+                <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-secondary-900 mb-3">Transparence</h3>
+              <p className="text-secondary-600">
+                Chaque score est expliqué avec les preuves qui le soutiennent
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Open Source Section */}
+      <section className="py-16 md:py-20 bg-primary-600">
+        <div className="container-main text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
+            100% Open Source
+          </h2>
+          <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
+            OpenProvena est un projet communautaire. Tout le code est disponible, 
+            les algorithmes sont transparents et documentés.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="https://github.com/pilotthrought/Openprovena"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition-colors duration-200 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+              Voir sur GitHub
+            </a>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 bg-secondary-900 text-white">
+      <section className="py-16 md:py-20 bg-secondary-900 text-white">
         <div className="container-main text-center">
-          <h2 className="text-3xl font-bold mb-4">{t.about.contact_title}</h2>
-          <p className="text-secondary-300 mb-8">
-            Vous avez des questions ou souhaitez contribuer au projet ?
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            Contribuer
+          </h2>
+          <p className="text-secondary-300 mb-8 max-w-2xl mx-auto">
+            Vous souhaitez participer au projet ? Découvrez comment contribuer sur GitHub.
           </p>
           
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href={`mailto:${t.about.contact_email}`}
-              className="px-8 py-4 bg-white text-secondary-900 font-semibold rounded-xl hover:bg-secondary-100 transition-colors duration-200 flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              {t.about.contact_email}
-            </a>
-            <a
-              href="https://github.com/openprovena/openprovena/discussions"
+              href="https://github.com/pilotthrought/Openprovena"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-secondary-800 font-semibold rounded-xl hover:bg-secondary-700 transition-colors duration-200 flex items-center gap-2"
@@ -248,36 +203,29 @@ export default function AboutPage() {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
               </svg>
-              Discussions GitHub
+              GitHub
             </a>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Final */}
-      <section className="py-20 bg-primary-600">
-        <div className="container-main text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            Rejoignez le mouvement OpenProvena
-          </h2>
-          <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
-            Que vous soyez développeur, researcher, ou simplement quelqu'un qui se soucie de la qualité de l'information, 
-            il y a une place pour vous dans notre communauté.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/docs/getting-started"
-              className="px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition-colors duration-200"
-            >
-              Commencer
-            </Link>
             <a
-              href="https://github.com/openprovena/openprovena"
+              href="https://www.reddit.com/r/OpenProvena/"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-primary-800 text-white font-semibold rounded-xl hover:bg-primary-900 transition-colors duration-200"
+              className="px-8 py-4 bg-secondary-800 font-semibold rounded-xl hover:bg-secondary-700 transition-colors duration-200 flex items-center gap-2"
             >
-              Contribuer sur GitHub
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701z" />
+              </svg>
+              Reddit
+            </a>
+            <a
+              href="https://www.linkedin.com/company/openprovena"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-secondary-800 font-semibold rounded-xl hover:bg-secondary-700 transition-colors duration-200 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z" />
+              </svg>
+              LinkedIn
             </a>
           </div>
         </div>
