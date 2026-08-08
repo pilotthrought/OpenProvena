@@ -197,7 +197,7 @@ services:
     container_name: openprovena-nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - /etc/letsencrypt/live/openprovena.org-0001:/etc/nginx/ssl:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"
       - "443:443"
