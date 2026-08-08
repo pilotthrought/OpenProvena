@@ -46,8 +46,8 @@ WORKDIR /app
 COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=deps /usr/local/bin /usr/local/bin
 
-# Copie le code source
-COPY backend/ ./backend/
+# Copie le code source directement dans app/
+COPY backend/ ./app/
 
 # Stage 4: Production
 FROM base AS production
@@ -67,11 +67,7 @@ WORKDIR /app
 # Copie les dépendances et le code
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
-COPY --from=builder /app/backend ./backend
-
-# Structure l'application
-RUN mkdir -p /app/backend/app && \
-    mv /app/backend/* /app/backend/app/ 2>/dev/null || true
+COPY --from=builder /app/app ./app
 
 # Change le propriétaire
 RUN chown -R appuser:appgroup /app
