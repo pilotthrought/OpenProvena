@@ -157,39 +157,39 @@ async def general_exception_handler(
 # ============================================
 
 # Health check - endpoint de base
-app.include_router(health.router, tags=["Health"])
+app.include_router(health, tags=["Health"])
 
 # Endpoints d'analyse de confiance
 app.include_router(
-    analyze.router,
+    analyze,
     prefix=settings.api_v1_prefix,
     tags=["Trust Analysis"]
 )
 
 # Endpoints de recherche
 app.include_router(
-    search.router,
+    search,
     prefix=settings.api_v1_prefix,
     tags=["Search"]
 )
 
 # Endpoints du dashboard
 app.include_router(
-    dashboard.router,
+    dashboard,
     prefix=settings.api_v1_prefix,
     tags=["Dashboard"]
 )
 
 # Endpoints des narratifs
 app.include_router(
-    narratives.router,
+    narratives,
     prefix=settings.api_v1_prefix,
     tags=["Narratives"]
 )
 
 # Endpoints du graphe de connaissances
 app.include_router(
-    graph.router,
+    graph,
     prefix=settings.api_v1_prefix,
     tags=["Knowledge Graph"]
 )
