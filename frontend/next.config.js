@@ -13,6 +13,19 @@ const nextConfig = {
     defaultLocale: 'fr',
     localeDetection: false,
   },
+
+  // Configuration du proxy API vers le backend FastAPI
+  async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://backend:8000';
+    return [
+      {
+        // Proxy vers l'API backend
+        source: '/api/:path*',
+        destination: `${apiUrl}/:path*`,
+      },
+    ];
+  },
+
   // Configuration des en-têtes de sécurité
   async headers() {
     return [

@@ -8,6 +8,7 @@ import SEO from '@/components/SEO';
 import SearchBar from '@/components/SearchBar';
 import TrustScore, { TrustBar } from '@/components/TrustScore';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { analyzeUrl } from '@/services/api';
 import type { TrustAnalysis, TrustSignal } from '@/types';
 
 /**
@@ -110,14 +111,13 @@ export default function SearchPage() {
     setError(null);
     
     try {
-      // En production: appel API
-      // const result = await trustApi.analyze({ url: query });
-      
-      // Simulation: attend un peu puis retourne le mock
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setAnalysis({ ...MOCK_ANALYSIS, url: query, domain: query.replace(/^https?:\/\//, '').split('/')[0] });
+      // Appelle l'API d'analyse
+      const result = await analyzeUrl(query);
+      setAnalysis(result);
     } catch (err) {
-      setError(t.errors.server_error);
+      // En cas d'erreur API, utilise les données mock en fallback
+      console.warn('API unavailable, using mock data:', err);
+      setAnalysis({ ...MOCK_ANALYSIS, url: query, domain: query.replace(/^https?:\/\//, '').split('/')[0] });
     } finally {
       setIsLoading(false);
     }

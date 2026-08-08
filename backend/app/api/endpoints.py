@@ -3,7 +3,8 @@ Endpoints API principaux pour OpenProvena
 Chaque module gère un domaine fonctionnel de l'API
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query, HTTPException
+from app.services.analysis import analyzer
 
 # ============================================
 # Health Check
@@ -44,11 +45,8 @@ analyze = APIRouter()
 
 @analyze.get("/analyze")
 async def analyze_url(
-    url: str | None = None,
-    domain: str | None = None,
-    include_signals: bool = True,
-    include_graph: bool = False,
-    include_history: bool = False
+    url: str | None = Query(None, description="URL à analyser"),
+    domain: str | None = Query(None, description="Domaine à analyser"),
 ):
     """
     Analyse la confiance d'une URL ou d'un domaine
@@ -56,54 +54,18 @@ async def analyze_url(
     Returns:
         TrustAnalysis: Analyse complète avec score et signaux
     """
-    # Mock response pour démonstration
-    return {
-        "id": "demo-analysis-001",
-        "url": url or domain or "example.com",
-        "domain": (url or domain or "example.com").replace("https://", "").replace("http://", "").split("/")[0],
-        "score": 78,
-        "trust_level": "high",
-        "category": "educational",
-        "domain_age": 3650,
-        "registration_date": "2015-01-01",
-        "last_updated": "2024-01-15",
-        "owner": "Example Organization",
-        "ai_generated_probability": 12,
-        "content_quality": 85,
-        "fact_check_overlap": 45,
-        "citation_quality": 72,
-        "signals": [
-            {
-                "id": "1",
-                "name": "Domain Age",
-                "description": "Old domain with established history",
-                "value": 95,
-                "weight": 0.15,
-                "category": "infrastructure",
-                "source": "WHOIS",
-                "timestamp": "2024-01-15T10:00:00Z"
-            },
-            {
-                "id": "2",
-                "name": "HTTPS Enabled",
-                "description": "Secure connection available",
-                "value": 100,
-                "weight": 0.1,
-                "category": "security",
-                "source": "SSL Labs",
-                "timestamp": "2024-01-15T10:00:00Z"
-            }
-        ],
-        "related_domains": [],
-        "historical_scores": [],
-        "analyzed_at": "2024-01-15T10:00:00Z",
-        "confidence": 92,
-        "explanation": "This domain shows strong indicators of trustworthiness.",
-        "recommendations": [
-            "Content appears well-researched",
-            "Consider verifying specific claims with primary sources"
-        ]
-    }
+    # Valide qu'au moins un paramètre est fourni
+    if not url and not domain:
+        raise HTTPException(
+            status_code=400, 
+            detail="Veuillez fournir soit une URL soit un domaine à analyser"
+        )
+    
+    # Utilise l'analyseur de confiance
+    target = url or domain
+    result = await analyzer.analyze(target)
+    
+    return result
 
 
 @analyze.get("/analyses/{analysis_id}")
