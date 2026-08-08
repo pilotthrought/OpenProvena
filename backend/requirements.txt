@@ -31,6 +31,10 @@ httpx>=0.27.0
 aiohttp>=3.9.0
 beautifulsoup4>=4.12.0
 
+# Analyse de domaine
+python-whois>=2.0.0
+dnspython>=2.6.0
+
 # Utils
 python-dotenv>=1.0.0
 python-dateutil>=2.9.0
