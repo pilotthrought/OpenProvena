@@ -83,11 +83,16 @@ function SignalCard({ signal }: { signal: TrustSignal }) {
  */
 export default function SearchPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [analysis, setAnalysis] = useState<TrustAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'signals' | 'history'>('overview');
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportText, setReportText] = useState('');
+  const [reportSent, setReportSent] = useState(false);
+  const isFrench = locale === 'fr';
 
   // Récupère la query depuis l'URL au chargement
   useEffect(() => {
@@ -117,6 +122,54 @@ export default function SearchPage() {
       setIsLoading(false);
     }
   }, [t]);
+
+  /**
+   * Gère le partage du résultat
+   */
+  const handleShare = async () => {
+    if (navigator.share && analysis) {
+      try {
+        await navigator.share({
+          title: `${isFrench ? 'Analyse' : 'Analysis'}: ${analysis.domain}`,
+          text: `${isFrench ? 'Score de confiance' : 'Trust score'}: ${analysis.score}/100`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        // L'utilisateur a annulé
+      }
+    } else {
+      // Fallback: copier dans le presse-papier
+      navigator.clipboard.writeText(window.location.href);
+      setShowShareModal(true);
+      setTimeout(() => setShowShareModal(false), 3000);
+    }
+  };
+
+  /**
+   * Gère le signalement d'un problème
+   */
+  const handleReport = async () => {
+    if (!reportText.trim()) return;
+    
+    // En production: envoyer à l'API
+    // await trustApi.report({ url: analysis.url, message: reportText });
+    
+    setReportSent(true);
+    setTimeout(() => {
+      setShowReportModal(false);
+      setReportText('');
+      setReportSent(false);
+    }, 2000);
+  };
+
+  /**
+   * Ouvre le modal de signalement
+   */
+  const openReportModal = () => {
+    setReportText('');
+    setReportSent(false);
+    setShowReportModal(true);
+  };
 
   return (
     <Layout>
@@ -203,8 +256,8 @@ export default function SearchPage() {
                       <span className="font-medium text-secondary-900">{analysis.registrationDate}</span>
                     </div>
                     <div>
-                      <span className="text-secondary-500 block">Domain Age</span>
-                      <span className="font-medium text-secondary-900">{Math.round(analysis.domainAge / 365)} ans</span>
+                      <span className="text-secondary-500 block">{isFrench ? 'Âge du domaine' : 'Domain Age'}</span>
+                      <span className="font-medium text-secondary-900">{Math.round(analysis.domainAge / 365)} {isFrench ? 'ans' : 'years'}</span>
                     </div>
                     <div>
                       <span className="text-secondary-500 block">{t.results.ai_generated_probability}</span>
@@ -215,13 +268,19 @@ export default function SearchPage() {
                 
                 {/* Actions */}
                 <div className="flex gap-2">
-                  <button className="btn-secondary flex items-center gap-2">
+                  <button 
+                    onClick={handleShare}
+                    className="btn-secondary flex items-center gap-2"
+                  >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
                     {t.results.share_results}
                   </button>
-                  <button className="btn-ghost flex items-center gap-2">
+                  <button 
+                    onClick={openReportModal}
+                    className="btn-ghost flex items-center gap-2"
+                  >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
@@ -244,7 +303,7 @@ export default function SearchPage() {
                         : 'text-secondary-600 border-transparent hover:text-secondary-900'
                     }`}
                   >
-                    {tab === 'overview' && 'Vue d\'ensemble'}
+                    {tab === 'overview' && (isFrench ? 'Vue d\'ensemble' : 'Overview')}
                     {tab === 'signals' && t.results.signals}
                     {tab === 'history' && t.results.historical_data}
                   </button>
@@ -274,11 +333,11 @@ export default function SearchPage() {
 
                     {/* Indicateurs de qualité */}
                     <div className="card-elevated p-6">
-                      <h3 className="font-semibold text-secondary-900 mb-4">Indicateurs clés</h3>
+                      <h3 className="font-semibold text-secondary-900 mb-4">{isFrench ? 'Indicateurs clés' : 'Key Indicators'}</h3>
                       <div className="space-y-4">
-                        <TrustBar score={analysis.contentQuality} label="Qualité du contenu" />
-                        <TrustBar score={analysis.citationQuality} label="Qualité des citations" />
-                        <TrustBar score={analysis.factCheckOverlap} label="Correspondance fact-checks" />
+                        <TrustBar score={analysis.contentQuality} label={isFrench ? 'Qualité du contenu' : 'Content Quality'} />
+                        <TrustBar score={analysis.citationQuality} label={isFrench ? 'Qualité des citations' : 'Citation Quality'} />
+                        <TrustBar score={analysis.factCheckOverlap} label={isFrench ? 'Correspondance fact-checks' : 'Fact-check Match'} />
                       </div>
                     </div>
 
@@ -316,7 +375,7 @@ export default function SearchPage() {
                 {/* Historique */}
                 {activeTab === 'history' && (
                   <div className="card-elevated p-6">
-                    <h3 className="font-semibold text-secondary-900 mb-4">Évolution du score</h3>
+                    <h3 className="font-semibold text-secondary-900 mb-4">{isFrench ? 'Évolution du score' : 'Score Evolution'}</h3>
                     <div className="space-y-3">
                       {analysis.historicalScores.map((item, idx) => (
                         <div key={idx} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg">
@@ -354,7 +413,7 @@ export default function SearchPage() {
 
                 {/* Confiance de l'analyse */}
                 <div className="card-elevated p-6">
-                  <h3 className="font-semibold text-secondary-900 mb-2">Confiance de l'analyse</h3>
+                  <h3 className="font-semibold text-secondary-900 mb-2">{isFrench ? 'Confiance de l\'analyse' : 'Analysis Confidence'}</h3>
                   <div className="flex items-center gap-3">
                     <div className="flex-1">
                       <div className="h-2 bg-secondary-200 rounded-full overflow-hidden">
@@ -367,7 +426,9 @@ export default function SearchPage() {
                     <span className="font-semibold text-secondary-900">{analysis.confidence}%</span>
                   </div>
                   <p className="text-sm text-secondary-500 mt-2">
-                    Ce score reflète la certitude de notre analyse basée sur les données disponibles.
+                    {isFrench 
+                      ? 'Ce score reflète la certitude de notre analyse basée sur les données disponibles.'
+                      : 'This score reflects the certainty of our analysis based on available data.'}
                   </p>
                 </div>
               </div>
@@ -382,8 +443,89 @@ export default function SearchPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <p className="text-secondary-500 text-lg">
-              Entrez une URL ou un domaine ci-dessus pour commencer l'analyse
+              {isFrench 
+                ? 'Entrez une URL ou un domaine ci-dessus pour commencer l\'analyse'
+                : 'Enter a URL or domain above to start the analysis'
+              }
             </p>
+          </div>
+        )}
+
+        {/* Modal de confirmation de partage */}
+        {showShareModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl p-6 max-w-sm w-full">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-secondary-900 mb-2">
+                  {isFrench ? 'Lien copié !' : 'Link copied!'}
+                </h3>
+                <p className="text-secondary-600">
+                  {isFrench ? 'Le lien a été copié dans votre presse-papier.' : 'The link has been copied to your clipboard.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de signalement */}
+        {showReportModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl p-6 max-w-md w-full">
+              {reportSent ? (
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-secondary-900 mb-2">
+                    {isFrench ? 'Signalement envoyé !' : 'Report sent!'}
+                  </h3>
+                  <p className="text-secondary-600">
+                    {isFrench ? 'Merci de votre aide pour améliorer la qualité de nos analyses.' : 'Thank you for helping us improve our analysis quality.'}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <h3 className="text-lg font-semibold text-secondary-900 mb-4">
+                    {isFrench ? 'Signaler un problème' : 'Report an issue'}
+                  </h3>
+                  <p className="text-sm text-secondary-600 mb-4">
+                    {isFrench 
+                      ? 'Ce score vous semble incorrect ? Signalez-le pour améliorer notre analyse.'
+                      : 'This score seems incorrect to you? Report it to improve our analysis.'
+                    }
+                  </p>
+                  <textarea
+                    value={reportText}
+                    onChange={(e) => setReportText(e.target.value)}
+                    placeholder={isFrench ? 'Décrivez le problème...' : 'Describe the issue...'}
+                    className="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none mb-4"
+                    rows={4}
+                  />
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowReportModal(false)}
+                      className="flex-1 px-4 py-2 border border-secondary-300 rounded-lg hover:bg-secondary-50 transition-colors"
+                    >
+                      {isFrench ? 'Annuler' : 'Cancel'}
+                    </button>
+                    <button
+                      onClick={handleReport}
+                      disabled={!reportText.trim()}
+                      className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+                    >
+                      {isFrench ? 'Envoyer' : 'Send'}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
       </section>
