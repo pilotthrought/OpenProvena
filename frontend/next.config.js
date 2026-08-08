@@ -16,11 +16,12 @@ const nextConfig = {
 
   // Configuration du proxy API vers le backend FastAPI
   async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://backend:8000';
     return [
       {
         // Proxy vers l'API backend
         source: '/api/:path*',
-        destination: process.env.NEXT_PUBLIC_API_URL + '/:path*' || 'http://backend:8000/:path*',
+        destination: `${apiUrl}/:path*`,
       },
     ];
   },
