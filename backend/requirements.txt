@@ -32,7 +32,7 @@ aiohttp>=3.9.0
 beautifulsoup4>=4.12.0
 
 # Analyse de domaine
-python-whois>=2.0.0
+whois>=0.9.0
 dnspython>=2.6.0
 
 # Utils
