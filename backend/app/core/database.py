@@ -12,20 +12,31 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
 from app.core.config import settings
 
 
-# Création du moteur de base de données async
-engine = create_async_engine(
-    settings.database_url,
-    echo=settings.debug,  # Affiche les requêtes SQL en mode debug
-    pool_size=settings.database_pool_size,
-    max_overflow=settings.database_max_overflow,
-    pool_pre_ping=True,  # Vérifie la connexion avant chaque utilisation
-    poolclass=NullPool,  # Utiliser NullPool pour les environments serverless
-)
+# NullPool est pertinent en serverless/debug ; en prod on utilise un vrai pool
+# de connexions (AsyncAdaptedQueuePool) avec pré-ping et tailles configurables.
+# On ne passe pool_size/max_overflow que lorsque le pool gère une file d'attente,
+# sinon SQLAlchemy lève une TypeError (NullPool ignore ces options).
+if settings.debug:
+    engine = create_async_engine(
+        settings.database_url,
+        echo=settings.debug,
+        pool_pre_ping=True,
+        poolclass=NullPool,
+    )
+else:
+    engine = create_async_engine(
+        settings.database_url,
+        echo=settings.debug,
+        pool_size=settings.database_pool_size,
+        max_overflow=settings.database_max_overflow,
+        pool_pre_ping=True,
+        poolclass=AsyncAdaptedQueuePool,
+    )
 
 # Session factory
 AsyncSessionLocal = async_sessionmaker(

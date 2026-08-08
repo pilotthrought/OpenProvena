@@ -13,8 +13,10 @@ WORKDIR /app
 # Copie les fichiers de dépendances
 COPY frontend/package.json frontend/package-lock.json* ./
 
-# Installe les dépendances
-RUN npm ci --only=production && \
+# Installe toutes les dépendances (y compris devDependencies)
+# Next.js a besoin de tailwindcss, postcss, typescript, eslint-config-next pour le build.
+# Le stage runner final utilise le mode "standalone" et n'a pas besoin de node_modules.
+RUN npm ci && \
     npm cache clean --force
 
 # Stage 2: Builder
