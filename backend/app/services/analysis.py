@@ -229,9 +229,20 @@ class TrustAnalyzer:
                 timeout=5
             )
             
-            if w and w.creation_date:
+            if w:
+                # creation_date peut être sous différents noms selon le TLD/registre,
+                # et les attributs sont dynamiques. Utiliser getattr.
+                creation = getattr(w, "creation_date", None) or getattr(w, "created", None)
+                if not creation:
+                    return {
+                        "score": 50,
+                        "name": "Âge du domaine",
+                        "description": "Date de création non disponible dans le WHOIS",
+                        "category": "infrastructure",
+                        "source": "WHOIS",
+                        "meta": {"domain_age": 0, "registration_date": "Inconnue", "owner": "Inconnu"},
+                    }
                 # creation_date peut être une liste ou un datetime
-                creation = w.creation_date
                 if isinstance(creation, list):
                     creation = creation[0]
 
@@ -248,14 +259,15 @@ class TrustAnalyzer:
                 else:
                     score = 30
                 
-                # Récupère le propriétaire/registrar si disponible
+                # Récupère le propriétaire/registrar si disponible.
+                # Les attributs du Domain sont dynamiques selon le TLD, utiliser
+                # getattr pour éviter les AttributeError sur les champs absents.
                 owner = "Inconnu"
-                if w.org:
-                    owner = w.org
-                elif w.name:
-                    owner = w.name
-                elif w.registrar:
-                    owner = w.registrar
+                for attr in ("org", "organization", "name", "registrar"):
+                    val = getattr(w, attr, None)
+                    if val:
+                        owner = val
+                        break
 
                 return {
                     "score": score,
