@@ -14,16 +14,10 @@ const nextConfig = {
     localeDetection: false,
   },
 
-  // Configuration du proxy API vers le backend FastAPI
+  // Note: le proxy API est géré par nginx (location /api/ -> backend:8000).
+  // En production standalone, les rewrites Next.js ne sont pas nécessaires.
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://backend:8000';
-    return [
-      {
-        // Proxy vers l'API backend
-        source: '/api/:path*',
-        destination: `${apiUrl}/:path*`,
-      },
-    ];
+    return [];
   },
 
   // Configuration des en-têtes de sécurité

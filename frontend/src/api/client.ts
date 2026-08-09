@@ -13,9 +13,12 @@ import {
   ConfigOptions,
 } from '@/types';
 
-// Configuration par défaut de l'API
+// Configuration par défaut de l'API.
+// En production, on utilise un chemin relatif qui transite par nginx.
+// NEXT_PUBLIC_API_URL ne doit pas pointer vers une adresse Docker interne
+// (ex: http://backend:8000) car le navigateur ne peut pas la résoudre.
 const DEFAULT_CONFIG: ConfigOptions = {
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || '/api',
   apiVersion: 'v1',
   timeout: 30000,
   retries: 3,
@@ -36,14 +39,22 @@ class ApiClient {
   }
 
   /**
-   * Construit l'URL complète pour une endpoint
+   * Construit l'URL complète pour une endpoint.
+   * Utilise un chemin relatif (via nginx) en production.
+   * Le résultat est de la forme: {apiUrl}/api/{apiVersion}{endpoint}
+   * Exemple: /api/v1/analyze
    */
   private buildUrl(endpoint: string, params?: Record<string, string>): string {
-    const url = new URL(`${this.config.apiUrl}/api/${this.config.apiVersion}${endpoint}`);
+    const path = `${this.config.apiUrl}/${this.config.apiVersion}${endpoint}`;
+    const url = new URL(path, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         url.searchParams.append(key, value);
       });
+    }
+    // Retourne un chemin relatif pour les requêtes same-origin (via nginx)
+    if (url.origin === (typeof window !== 'undefined' ? window.location.origin : 'http://localhost')) {
+      return `${url.pathname}${url.search}`;
     }
     return url.toString();
   }
