@@ -68,9 +68,9 @@ export default function SearchPage() {
       const result = await analyzeUrl(query);
       setAnalysis(result);
     } catch (err) {
-      console.error('Erreur lors de l\'analyse:', err);
+      console.error("Erreur lors de l'analyse:", err);
       setError(isFrench
-        ? 'Impossible d\'analyser cette URL. Vérifiez l\'URL ou réessayez ultérieurement.'
+        ? "Impossible d'analyser cette URL. Vérifiez l'URL ou réessayez ultérieurement."
         : 'Unable to analyze this URL. Please check the URL or try again later.');
     } finally {
       setIsLoading(false);
@@ -261,7 +261,7 @@ export default function SearchPage() {
                         : 'text-secondary-600 border-transparent hover:text-secondary-900'
                     }`}
                   >
-                    {tab === 'overview' && (isFrench ? 'Vue d\'ensemble' : 'Overview')}
+                    {tab === 'overview' && (isFrench ? "Vue d'ensemble" : 'Overview')}
                     {tab === 'signals' && t.results.signals}
                     {tab === 'history' && t.results.historical_data}
                   </button>
@@ -350,7 +350,7 @@ export default function SearchPage() {
                       ) : (
                         <p className="text-secondary-500 text-center py-8">
                           {isFrench
-                            ? 'Aucun historique disponible. Le score sera enregistré lors de chaque analyse et l\\'historique se constituera au fil du temps.'
+                            ? "Aucun historique disponible. Le score sera enregistré lors de chaque analyse et l'historique se constituera au fil du temps."
                             : 'No history available. The score will be saved on each analysis and history will build up over time.'}
                         </p>
                       )}
@@ -385,7 +385,7 @@ export default function SearchPage() {
 
                 {/* Confiance de l'analyse */}
                 <div className="card-elevated p-6">
-                  <h3 className="font-semibold text-secondary-900 mb-2">{isFrench ? 'Confiance de l\'analyse' : 'Analysis Confidence'}</h3>
+                  <h3 className="font-semibold text-secondary-900 mb-2">{isFrench ? "Confiance de l'analyse" : 'Analysis Confidence'}</h3>
                   <div className="flex items-center gap-3">
                     <div className="flex-1">
                       <div className="h-2 bg-secondary-200 rounded-full overflow-hidden">
@@ -416,7 +416,7 @@ export default function SearchPage() {
             </svg>
             <p className="text-secondary-500 text-lg">
               {isFrench 
-                ? 'Entrez une URL ou un domaine ci-dessus pour commencer l\'analyse'
+                ? "Entrez une URL ou un domaine ci-dessus pour commencer l'analyse"
                 : 'Enter a URL or domain above to start the analysis'
               }
             </p>
