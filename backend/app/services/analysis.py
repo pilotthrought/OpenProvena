@@ -4,16 +4,32 @@ Analyse les URLs et domaines pour déterminer leur score de confiance
 """
 
 import asyncio
+import json
 import socket
 import ssl
 import whois
 import httpx
-from datetime import datetime
+import redis.asyncio as aioredis
+from datetime import datetime, timedelta
 from typing import Optional
 from urllib.parse import urlparse
 import logging
 
+from app.core.config import settings
+
 logger = logging.getLogger(__name__)
+
+
+# Noms de signaux traduits en français
+SIGNAL_NAMES = {
+    "domain_age": "Âge du domaine",
+    "https": "HTTPS activé",
+    "ssl": "Qualité SSL",
+    "dns": "Configuration DNS",
+    "headers": "En-têtes de sécurité",
+    "content": "Qualité du contenu",
+    "reputation": "Réputation du domaine",
+}
 
 
 class TrustAnalyzer:
@@ -34,6 +50,64 @@ class TrustAnalyzer:
             "social_signals": 0.10,
             "ai_detection": 0.10,
         }
+        self._redis: Optional[aioredis.Redis] = None
+
+    async def _get_redis(self) -> Optional[aioredis.Redis]:
+        """Connexion Redis paresseuse pour l'historique des analyses"""
+        if self._redis is None:
+            try:
+                self._redis = aioredis.from_url(
+                    settings.redis_url, decode_responses=True, socket_connect_timeout=3
+                )
+                await self._redis.ping()
+            except Exception as e:
+                logger.warning(f"Redis indisponible, historique désactivé: {e}")
+                self._redis = None
+        return self._redis
+
+    async def _save_and_get_history(self, domain: str, current_score: int) -> list:
+        """
+        Sauvegarde le score courant en Redis et récupère l'historique récent.
+        Retourne une liste de {date, score, change} triée du plus récent au plus ancien.
+        """
+        redis = await self._get_redis()
+        if redis is None:
+            return []
+
+        key = f"history:{domain}"
+        now = datetime.now()
+        entry = json.dumps({"date": now.strftime("%Y-%m"), "score": current_score})
+
+        try:
+            # Récupère l'historique existant avant d'ajouter la nouvelle entrée
+            existing = await redis.lrange(key, 0, 11)
+            # Ajoute la nouvelle entrée en tête de liste
+            await redis.lpush(key, entry)
+            # Garde au maximum 12 entrées (1 an)
+            await redis.ltrim(key, 0, 11)
+            # Expire après 400 jours pour éviter l'accumulation
+            await redis.expire(key, 400 * 24 * 3600)
+        except Exception as e:
+            logger.warning(f"Erreur lors de la sauvegarde de l'historique: {e}")
+            return []
+
+        history = []
+        for raw in existing:
+            try:
+                item = json.loads(raw)
+                history.append(item)
+            except (json.JSONDecodeError, TypeError):
+                continue
+
+        # Construit la liste avec les variations de score
+        result = [{"date": now.strftime("%Y-%m"), "score": current_score, "change": 0}]
+        prev_score = current_score
+        for item in history:
+            change = item["score"] - prev_score
+            result.append({"date": item["date"], "score": item["score"], "change": change})
+            prev_score = item["score"]
+
+        return result
     
     async def analyze(self, url_or_domain: str) -> dict:
         """
@@ -77,6 +151,9 @@ class TrustAnalyzer:
             "content", "reputation"
         ]
         
+        # Métadonnées WHOIS récupérées par check_domain_age
+        whois_meta = {}
+
         for i, result in enumerate(results):
             signal_type = signal_types[i] if i < len(signal_types) else f"signal_{i}"
             
@@ -85,9 +162,12 @@ class TrustAnalyzer:
                 score = 50  # Score neutre en cas d'erreur
             else:
                 score = result.get("score", 50)
+                # Capture les métadonnées WHOIS si disponibles
+                if signal_type == "domain_age" and result.get("meta"):
+                    whois_meta = result["meta"]
                 signals.append({
                     "id": f"{signal_type}-{datetime.now().timestamp()}",
-                    "name": result.get("name", signal_type.title()),
+                    "name": SIGNAL_NAMES.get(signal_type, result.get("name", signal_type.title())),
                     "description": result.get("description", ""),
                     "value": score,
                     "weight": self.weights.get(signal_type, 0.10),
@@ -110,8 +190,11 @@ class TrustAnalyzer:
         # Détermine la catégorie du site
         category = await self._detect_category(url_or_domain)
         
-        # Analyse de contenu IA (simplifiée)
+        # Analyse de contenu IA
         ai_probability = await self._detect_ai_content(url_or_domain)
+
+        # Sauvegarde et récupère l'historique des scores
+        historical_scores = await self._save_and_get_history(domain, final_score)
         
         return {
             "id": f"analysis-{domain}-{datetime.now().timestamp()}",
@@ -120,17 +203,17 @@ class TrustAnalyzer:
             "score": final_score,
             "trust_level": trust_level,
             "category": category,
-            "domain_age": self._estimate_domain_age(signals),
-            "registration_date": self._get_registration_date(signals),
+            "domain_age": whois_meta.get("domain_age", 0),
+            "registration_date": whois_meta.get("registration_date", "Inconnue"),
             "last_updated": datetime.now().isoformat() + "Z",
-            "owner": self._get_owner(signals),
+            "owner": whois_meta.get("owner", "Inconnu"),
             "ai_generated_probability": ai_probability,
             "content_quality": self._calc_content_quality(signals),
             "fact_check_overlap": self._calc_fact_check_overlap(signals),
             "citation_quality": self._calc_citation_quality(signals),
             "signals": signals,
             "related_domains": [],
-            "historical_scores": [],
+            "historical_scores": historical_scores,
             "analyzed_at": datetime.now().isoformat() + "Z",
             "confidence": self._calc_confidence(signals),
             "explanation": self._generate_explanation(final_score, signals),
@@ -147,7 +230,12 @@ class TrustAnalyzer:
             )
             
             if w and w.creation_date:
-                age_days = (datetime.now() - w.creation_date).days
+                # creation_date peut être une liste ou un datetime
+                creation = w.creation_date
+                if isinstance(creation, list):
+                    creation = creation[0]
+
+                age_days = (datetime.now() - creation).days
                 # Score basé sur l'âge (plus vieux = plus fiable)
                 if age_days > 3650:  # > 10 ans
                     score = 95
@@ -160,20 +248,34 @@ class TrustAnalyzer:
                 else:
                     score = 30
                 
+                # Récupère le propriétaire/registrar si disponible
+                owner = "Inconnu"
+                if w.org:
+                    owner = w.org
+                elif w.name:
+                    owner = w.name
+                elif w.registrar:
+                    owner = w.registrar
+
                 return {
                     "score": score,
-                    "name": "Domain Age",
-                    "description": f"Domain registered {age_days} days ago",
+                    "name": "Âge du domaine",
+                    "description": f"Domaine enregistré il y a {age_days} jours",
                     "category": "infrastructure",
                     "source": "WHOIS",
+                    "meta": {
+                        "domain_age": age_days,
+                        "registration_date": creation.strftime("%Y-%m-%d"),
+                        "owner": owner,
+                    },
                 }
         except Exception as e:
             logger.warning(f"WHOIS lookup failed for {domain}: {e}")
         
         return {
             "score": 50,
-            "name": "Domain Age",
-            "description": "Unable to determine domain age",
+            "name": "Âge du domaine",
+            "description": "Impossible de déterminer l'âge du domaine",
             "category": "infrastructure",
             "source": "WHOIS",
         }
@@ -190,8 +292,8 @@ class TrustAnalyzer:
                     if cert:
                         return {
                             "score": 100,
-                            "name": "HTTPS Enabled",
-                            "description": "Secure HTTPS connection available",
+                            "name": "HTTPS activé",
+                            "description": "Connexion HTTPS sécurisée disponible",
                             "category": "security",
                             "source": "SSL/TLS",
                         }
@@ -200,8 +302,8 @@ class TrustAnalyzer:
         
         return {
             "score": 30,
-            "name": "HTTPS Enabled",
-            "description": "No secure HTTPS connection available",
+            "name": "HTTPS activé",
+            "description": "Aucune connexion HTTPS sécurisée disponible",
             "category": "security",
             "source": "SSL/TLS",
         }
@@ -230,8 +332,8 @@ class TrustAnalyzer:
                     
                     return {
                         "score": score,
-                        "name": "SSL Quality",
-                        "description": f"SSL/TLS configured with {cipher[0] if cipher else 'unknown'}",
+                        "name": "Qualité SSL",
+                        "description": f"SSL/TLS configuré avec {cipher[0] if cipher else 'inconnu'}",
                         "category": "security",
                         "source": "SSL Labs",
                     }
@@ -240,8 +342,8 @@ class TrustAnalyzer:
         
         return {
             "score": 40,
-            "name": "SSL Quality",
-            "description": "Unable to verify SSL configuration",
+            "name": "Qualité SSL",
+            "description": "Impossible de vérifier la configuration SSL",
             "category": "security",
             "source": "SSL Labs",
         }
@@ -260,8 +362,8 @@ class TrustAnalyzer:
         
         return {
             "score": min(100, score),
-            "name": "DNS Configuration",
-            "description": "DNS records verified",
+            "name": "Configuration DNS",
+            "description": "Enregistrements DNS vérifiés",
             "category": "infrastructure",
             "source": "DNS",
         }
@@ -290,10 +392,11 @@ class TrustAnalyzer:
                 
                 score = min(100, score)
                 
+                found = len([h for h in security_headers if h.lower() in [x.lower() for x in headers.keys()]])
                 return {
                     "score": score,
-                    "name": "Security Headers",
-                    "description": f"{len([h for h in security_headers if h.lower() in [x.lower() for x in headers.keys()]])} security headers present",
+                    "name": "En-têtes de sécurité",
+                    "description": f"{found} en-têtes de sécurité présents",
                     "category": "security",
                     "source": "HTTP Headers",
                 }
@@ -302,8 +405,8 @@ class TrustAnalyzer:
         
         return {
             "score": score,
-            "name": "Security Headers",
-            "description": "Unable to verify security headers",
+            "name": "En-têtes de sécurité",
+            "description": "Impossible de vérifier les en-têtes de sécurité",
             "category": "security",
             "source": "HTTP Headers",
         }
@@ -336,8 +439,8 @@ class TrustAnalyzer:
                 
                 return {
                     "score": score,
-                    "name": "Content Quality",
-                    "description": "Content analysis completed",
+                    "name": "Qualité du contenu",
+                    "description": "Analyse du contenu terminée",
                     "category": "content",
                     "source": "Content Analysis",
                 }
@@ -346,8 +449,8 @@ class TrustAnalyzer:
         
         return {
             "score": score,
-            "name": "Content Quality",
-            "description": "Content analysis based on basic metrics",
+            "name": "Qualité du contenu",
+            "description": "Analyse basée sur des métriques de base",
             "category": "content",
             "source": "Content Analysis",
         }
@@ -373,8 +476,8 @@ class TrustAnalyzer:
         
         return {
             "score": score,
-            "name": "Domain Reputation",
-            "description": "Reputation check completed",
+            "name": "Réputation du domaine",
+            "description": "Vérification de réputation terminée",
             "category": "reputation",
             "source": "Internal Database",
         }
@@ -398,8 +501,8 @@ class TrustAnalyzer:
         
         categories = {
             'news': ['lemonde', 'lefigaro', 'mediapart', 'afp', 'reuters', 'bbc', 'cnn', 'guardian', 'nytimes', '20minutes', 'huffpost'],
-            'gov': ['.gov', 'gouv', 'assemblee-nationale', 'senat'],
-            'edu': ['.edu', 'university', 'universite', 'school'],
+            'government': ['.gov', 'gouv', 'assemblee-nationale', 'senat'],
+            'educational': ['.edu', 'university', 'universite', 'school'],
             'blog': ['medium.com', 'wordpress', 'blogspot', 'over-blog'],
             'social': ['twitter', 'facebook', 'linkedin', 'instagram', 'tiktok'],
             'forum': ['forum', 'reddit', 'discourse'],
@@ -413,9 +516,42 @@ class TrustAnalyzer:
         return "other"
     
     async def _detect_ai_content(self, url: str) -> int:
-        """Détection simplifiée de contenu généré par IA"""
-        # En production: utiliser un modèle ML spécialisé
-        # Retourne un score de 0-100 (plus haut = plus probable IA)
+        """
+        Estime la probabilité que le contenu soit généré par IA.
+        Heuristique basée sur la structure du contenu (sans modèle ML lourd).
+        Retourne un score de 0-100 (plus haut = plus probable IA).
+        """
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                response = await client.get(url, follow_redirects=True)
+                content = response.text
+
+                ai_score = 10  # Base faible
+                content_lower = content.lower()
+
+                # Phrases très répétitives / générées par IA
+                ai_phrases = [
+                    'in conclusion', 'en conclusion', 'it is important to note',
+                    'il est important de noter', 'furthermore', 'de plus',
+                    'in summary', 'en résumé', 'it is worth noting',
+                ]
+                ai_hits = sum(1 for p in ai_phrases if p in content_lower)
+                ai_score += ai_hits * 8
+
+                # Contenu très court = potentiellement low-quality / IA
+                text_length = len(content)
+                if text_length < 1500:
+                    ai_score += 15
+
+                # Trop uniforme (peu de ponctuation variée)
+                punct_variety = len(set(c for c in content if c in '!?;:'))
+                if punct_variety < 5:
+                    ai_score += 10
+
+                return min(100, ai_score)
+        except Exception:
+            pass
+
         return 15  # Score par défaut bas (probablement humain)
     
     def _calc_content_quality(self, signals: list) -> int:
@@ -443,27 +579,7 @@ class TrustAnalyzer:
         successful = sum(1 for s in signals if s.get("value", 0) > 0)
         total = len(signals) if signals else 1
         return int((successful / total) * 100)
-    
-    def _estimate_domain_age(self, signals: list) -> int:
-        """Estime l'âge du domaine en jours"""
-        for signal in signals:
-            if signal.get("name") == "Domain Age" and "days ago" in signal.get("description", ""):
-                try:
-                    days = int(signal.get("description", "").split()[0])
-                    return days
-                except:
-                    pass
-        return 365
-    
-    def _get_registration_date(self, signals: list) -> str:
-        """Obtient la date d'enregistrement"""
-        # En production: récupérer la vraie date de WHOIS
-        return datetime.now().strftime("%Y-%m-%d")
-    
-    def _get_owner(self, signals: list) -> str:
-        """Obtient le propriétaire du domaine"""
-        return "Unknown"
-    
+
     def _generate_explanation(self, score: int, signals: list) -> str:
         """Génère une explication du score"""
         explanations = {

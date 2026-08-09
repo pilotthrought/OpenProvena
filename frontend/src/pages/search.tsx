@@ -12,53 +12,6 @@ import { analyzeUrl } from '@/services/api';
 import type { TrustAnalysis, TrustSignal } from '@/types';
 
 /**
- * Mock data pour démonstration
- * En production, ces données viendraient de l'API
- */
-const MOCK_ANALYSIS: TrustAnalysis = {
-  id: '1',
-  url: 'https://example.com',
-  domain: 'example.com',
-  score: 78,
-  trustLevel: 'high',
-  category: 'educational',
-  domainAge: 3650,
-  registrationDate: '2015-01-01',
-  lastUpdated: '2024-01-15',
-  owner: 'Example Organization',
-  registrar: 'GoDaddy',
-  aiGeneratedProbability: 12,
-  contentQuality: 85,
-  factCheckOverlap: 45,
-  citationQuality: 72,
-  signals: [
-    { id: '1', name: 'Domain Age', description: 'Old domain', value: 95, weight: 0.15, category: 'infrastructure', source: 'WHOIS', timestamp: '2024-01-15' },
-    { id: '2', name: 'HTTPS Enabled', description: 'Secure connection', value: 100, weight: 0.1, category: 'security', source: 'SSL Labs', timestamp: '2024-01-15' },
-    { id: '3', name: 'Author Transparency', description: 'Clear authorship', value: 80, weight: 0.12, category: 'content', source: 'Content Analysis', timestamp: '2024-01-15' },
-    { id: '4', name: 'Citation Quality', description: 'Well-sourced content', value: 75, weight: 0.1, category: 'content', source: 'NLP Analysis', timestamp: '2024-01-15' },
-    { id: '5', name: 'AI Detection', description: 'Likely human-written', value: 88, weight: 0.08, category: 'content', source: 'AI Detector', timestamp: '2024-01-15' },
-  ],
-  relatedDomains: [
-    { domain: 'subdomain.example.com', score: 82, relationship: 'subdomain' },
-    { domain: 'related.org', score: 65, relationship: 'sibling' },
-  ],
-  historicalScores: [
-    { date: '2024-01', score: 78, change: 0 },
-    { date: '2023-12', score: 76, change: 2 },
-    { date: '2023-11', score: 74, change: 2 },
-    { date: '2023-10', score: 75, change: -1 },
-  ],
-  analyzedAt: new Date().toISOString(),
-  confidence: 92,
-  explanation: 'This domain shows strong indicators of trustworthiness based on multiple factors including domain age, security practices, and content quality.',
-  recommendations: [
-    'Content appears well-researched with proper citations',
-    'Consider verifying specific claims with primary sources',
-    'Cross-reference with other trusted sources for sensitive topics',
-  ],
-};
-
-/**
  * Composant pour afficher un signal individuel
  */
 function SignalCard({ signal }: { signal: TrustSignal }) {
@@ -115,9 +68,10 @@ export default function SearchPage() {
       const result = await analyzeUrl(query);
       setAnalysis(result);
     } catch (err) {
-      // En cas d'erreur API, utilise les données mock en fallback
-      console.warn('API unavailable, using mock data:', err);
-      setAnalysis({ ...MOCK_ANALYSIS, url: query, domain: query.replace(/^https?:\/\//, '').split('/')[0] });
+      console.error('Erreur lors de l\'analyse:', err);
+      setError(isFrench
+        ? 'Impossible d\'analyser cette URL. Vérifiez l\'URL ou réessayez ultérieurement.'
+        : 'Unable to analyze this URL. Please check the URL or try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -257,7 +211,11 @@ export default function SearchPage() {
                     </div>
                     <div>
                       <span className="text-secondary-500 block">{isFrench ? 'Âge du domaine' : 'Domain Age'}</span>
-                      <span className="font-medium text-secondary-900">{Math.round(analysis.domainAge / 365)} {isFrench ? 'ans' : 'years'}</span>
+                      <span className="font-medium text-secondary-900">
+                        {analysis.domainAge > 0
+                          ? `${Math.round(analysis.domainAge / 365)} ${isFrench ? 'ans' : 'years'}`
+                          : (isFrench ? 'Inconnu' : 'Unknown')}
+                      </span>
                     </div>
                     <div>
                       <span className="text-secondary-500 block">{t.results.ai_generated_probability}</span>
@@ -377,17 +335,25 @@ export default function SearchPage() {
                   <div className="card-elevated p-6">
                     <h3 className="font-semibold text-secondary-900 mb-4">{isFrench ? 'Évolution du score' : 'Score Evolution'}</h3>
                     <div className="space-y-3">
-                      {analysis.historicalScores.map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg">
-                          <span className="text-secondary-600">{item.date}</span>
-                          <div className="flex items-center gap-3">
-                            <span className="font-semibold text-secondary-900">{item.score}/100</span>
-                            <span className={`text-sm ${item.change > 0 ? 'text-emerald-600' : item.change < 0 ? 'text-red-600' : 'text-secondary-400'}`}>
-                              {item.change > 0 ? '+' : ''}{item.change}
-                            </span>
+                      {analysis.historicalScores.length > 0 ? (
+                        analysis.historicalScores.map((item, idx) => (
+                          <div key={idx} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg">
+                            <span className="text-secondary-600">{item.date}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="font-semibold text-secondary-900">{item.score}/100</span>
+                              <span className={`text-sm ${item.change > 0 ? 'text-emerald-600' : item.change < 0 ? 'text-red-600' : 'text-secondary-400'}`}>
+                                {item.change > 0 ? '+' : ''}{item.change}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                      ) : (
+                        <p className="text-secondary-500 text-center py-8">
+                          {isFrench
+                            ? 'Aucun historique disponible. Le score sera enregistré lors de chaque analyse et l\\'historique se constituera au fil du temps.'
+                            : 'No history available. The score will be saved on each analysis and history will build up over time.'}
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}
@@ -399,15 +365,21 @@ export default function SearchPage() {
                 <div className="card-elevated p-6">
                   <h3 className="font-semibold text-secondary-900 mb-4">{t.results.related_sources}</h3>
                   <div className="space-y-3">
-                    {analysis.relatedDomains.map((domain, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors cursor-pointer">
-                        <div>
-                          <p className="font-medium text-secondary-900">{domain.domain}</p>
-                          <p className="text-xs text-secondary-500">{domain.relationship}</p>
+                    {analysis.relatedDomains.length > 0 ? (
+                      analysis.relatedDomains.map((domain, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors cursor-pointer">
+                          <div>
+                            <p className="font-medium text-secondary-900">{domain.domain}</p>
+                            <p className="text-xs text-secondary-500">{domain.relationship}</p>
+                          </div>
+                          <span className="font-semibold text-primary-600">{domain.score}</span>
                         </div>
-                        <span className="font-semibold text-primary-600">{domain.score}</span>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <p className="text-sm text-secondary-500">
+                        {isFrench ? 'Aucune source connexe détectée.' : 'No related sources detected.'}
+                      </p>
+                    )}
                   </div>
                 </div>
 
