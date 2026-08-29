@@ -36,7 +36,7 @@ OpenProvena est une plateforme open source d'analyse de la crédibilité de l'in
 - ✅ **Multi-langue** - Français et Anglais supportés
 - ✅ **API REST/GraphQL** - Intégration facile
 - ✅ **Scalable** - Architecture microservices prête pour Kubernetes
-- ✅ **Communautaire** - Développé par des chercheurs et développeurs du monde entier
+- ✅ **Communautaire**
 
 ---
 
