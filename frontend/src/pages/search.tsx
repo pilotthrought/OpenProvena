@@ -37,7 +37,7 @@ function SignalCard({ signal }: { signal: TrustSignal }) {
  */
 export default function SearchPage() {
   const router = useRouter();
-  const { t, locale } = useLanguage();
+  const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [analysis, setAnalysis] = useState<TrustAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +46,6 @@ export default function SearchPage() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportText, setReportText] = useState('');
   const [reportSent, setReportSent] = useState(false);
-  const isFrench = locale === 'fr';
 
   // Récupère la query depuis l'URL au chargement
   useEffect(() => {
@@ -69,9 +68,7 @@ export default function SearchPage() {
       setAnalysis(result);
     } catch (err) {
       console.error("Erreur lors de l'analyse:", err);
-      setError(isFrench
-        ? "Impossible d'analyser cette URL. Vérifiez l'URL ou réessayez ultérieurement."
-        : 'Unable to analyze this URL. Please check the URL or try again later.');
+      setError(t.search.analysis_error);
     } finally {
       setIsLoading(false);
     }
@@ -84,8 +81,8 @@ export default function SearchPage() {
     if (navigator.share && analysis) {
       try {
         await navigator.share({
-          title: `${isFrench ? 'Analyse' : 'Analysis'}: ${analysis.domain}`,
-          text: `${isFrench ? 'Score de confiance' : 'Trust score'}: ${analysis.score}/100`,
+          title: `${t.results.share_title}: ${analysis.domain}`,
+          text: `${t.results.share_text}: ${analysis.score}/100`,
           url: window.location.href,
         });
       } catch (err) {
@@ -210,11 +207,11 @@ export default function SearchPage() {
                       <span className="font-medium text-secondary-900">{analysis.registrationDate}</span>
                     </div>
                     <div>
-                      <span className="text-secondary-500 block">{isFrench ? 'Âge du domaine' : 'Domain Age'}</span>
+                      <span className="text-secondary-500 block">{t.results.domain_age}</span>
                       <span className="font-medium text-secondary-900">
                         {analysis.domainAge > 0
-                          ? `${Math.round(analysis.domainAge / 365)} ${isFrench ? 'ans' : 'years'}`
-                          : (isFrench ? 'Inconnu' : 'Unknown')}
+                          ? `${Math.round(analysis.domainAge / 365)} ${t.results.years}`
+                          : t.results.unknown}
                       </span>
                     </div>
                     <div>
@@ -261,7 +258,7 @@ export default function SearchPage() {
                         : 'text-secondary-600 border-transparent hover:text-secondary-900'
                     }`}
                   >
-                    {tab === 'overview' && (isFrench ? "Vue d'ensemble" : 'Overview')}
+                    {tab === 'overview' && (t.results.overview_tab as any)}
                     {tab === 'signals' && t.results.signals}
                     {tab === 'history' && t.results.historical_data}
                   </button>
@@ -291,11 +288,11 @@ export default function SearchPage() {
 
                     {/* Indicateurs de qualité */}
                     <div className="card-elevated p-6">
-                      <h3 className="font-semibold text-secondary-900 mb-4">{isFrench ? 'Indicateurs clés' : 'Key Indicators'}</h3>
+                      <h3 className="font-semibold text-secondary-900 mb-4">{t.results.key_indicators}</h3>
                       <div className="space-y-4">
-                        <TrustBar score={analysis.contentQuality} label={isFrench ? 'Qualité du contenu' : 'Content Quality'} />
-                        <TrustBar score={analysis.citationQuality} label={isFrench ? 'Qualité des citations' : 'Citation Quality'} />
-                        <TrustBar score={analysis.factCheckOverlap} label={isFrench ? 'Correspondance fact-checks' : 'Fact-check Match'} />
+                        <TrustBar score={analysis.contentQuality} label={t.results.content_quality} />
+                        <TrustBar score={analysis.citationQuality} label={t.results.citation_quality} />
+                        <TrustBar score={analysis.factCheckOverlap} label={t.results.factcheck_match} />
                       </div>
                     </div>
 
@@ -333,7 +330,7 @@ export default function SearchPage() {
                 {/* Historique */}
                 {activeTab === 'history' && (
                   <div className="card-elevated p-6">
-                    <h3 className="font-semibold text-secondary-900 mb-4">{isFrench ? 'Évolution du score' : 'Score Evolution'}</h3>
+                    <h3 className="font-semibold text-secondary-900 mb-4">{t.results.score_evolution}</h3>
                     <div className="space-y-3">
                       {analysis.historicalScores.length > 0 ? (
                         analysis.historicalScores.map((item, idx) => (
@@ -349,9 +346,7 @@ export default function SearchPage() {
                         ))
                       ) : (
                         <p className="text-secondary-500 text-center py-8">
-                          {isFrench
-                            ? "Aucun historique disponible. Le score sera enregistré lors de chaque analyse et l'historique se constituera au fil du temps."
-                            : 'No history available. The score will be saved on each analysis and history will build up over time.'}
+                          {t.results.no_history}
                         </p>
                       )}
                     </div>
@@ -377,7 +372,7 @@ export default function SearchPage() {
                       ))
                     ) : (
                       <p className="text-sm text-secondary-500">
-                        {isFrench ? 'Aucune source connexe détectée.' : 'No related sources detected.'}
+                        {t.results.no_related_sources}
                       </p>
                     )}
                   </div>
@@ -385,7 +380,7 @@ export default function SearchPage() {
 
                 {/* Confiance de l'analyse */}
                 <div className="card-elevated p-6">
-                  <h3 className="font-semibold text-secondary-900 mb-2">{isFrench ? "Confiance de l'analyse" : 'Analysis Confidence'}</h3>
+                  <h3 className="font-semibold text-secondary-900 mb-2">{t.results.analysis_confidence}</h3>
                   <div className="flex items-center gap-3">
                     <div className="flex-1">
                       <div className="h-2 bg-secondary-200 rounded-full overflow-hidden">
@@ -398,9 +393,7 @@ export default function SearchPage() {
                     <span className="font-semibold text-secondary-900">{analysis.confidence}%</span>
                   </div>
                   <p className="text-sm text-secondary-500 mt-2">
-                    {isFrench 
-                      ? 'Ce score reflète la certitude de notre analyse basée sur les données disponibles.'
-                      : 'This score reflects the certainty of our analysis based on available data.'}
+                    {t.results.analysis_confidence_text}
                   </p>
                 </div>
               </div>
@@ -414,13 +407,10 @@ export default function SearchPage() {
             <svg className="w-24 h-24 text-secondary-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <p className="text-secondary-500 text-lg">
-              {isFrench 
-                ? "Entrez une URL ou un domaine ci-dessus pour commencer l'analyse"
-                : 'Enter a URL or domain above to start the analysis'
-              }
-            </p>
-          </div>
+              <p className="text-secondary-500 text-lg">
+                {t.results.enter_url_prompt}
+              </p>
+            </div>
         )}
 
         {/* Modal de confirmation de partage */}
@@ -434,10 +424,10 @@ export default function SearchPage() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold text-secondary-900 mb-2">
-                  {isFrench ? 'Lien copié !' : 'Link copied!'}
+                  {t.results.link_copied}
                 </h3>
                 <p className="text-secondary-600">
-                  {isFrench ? 'Le lien a été copié dans votre presse-papier.' : 'The link has been copied to your clipboard.'}
+                  {t.results.link_copied_text}
                 </p>
               </div>
             </div>
@@ -456,43 +446,39 @@ export default function SearchPage() {
                     </svg>
                   </div>
                   <h3 className="text-lg font-semibold text-secondary-900 mb-2">
-                    {isFrench ? 'Signalement envoyé !' : 'Report sent!'}
+                    {t.results.report_sent}
                   </h3>
                   <p className="text-secondary-600">
-                    {isFrench ? 'Merci de votre aide pour améliorer la qualité de nos analyses.' : 'Thank you for helping us improve our analysis quality.'}
+                    {t.results.report_sent_text}
                   </p>
                 </div>
               ) : (
                 <>
                   <h3 className="text-lg font-semibold text-secondary-900 mb-4">
-                    {isFrench ? 'Signaler un problème' : 'Report an issue'}
+                    {t.results.report_title}
                   </h3>
                   <p className="text-sm text-secondary-600 mb-4">
-                    {isFrench 
-                      ? 'Ce score vous semble incorrect ? Signalez-le pour améliorer notre analyse.'
-                      : 'This score seems incorrect to you? Report it to improve our analysis.'
-                    }
+                    {t.results.report_text}
                   </p>
                   <textarea
                     value={reportText}
                     onChange={(e) => setReportText(e.target.value)}
-                    placeholder={isFrench ? 'Décrivez le problème...' : 'Describe the issue...'}
+                    placeholder={t.results.report_placeholder}
                     className="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none mb-4"
-                    rows={4}
                   />
                   <div className="flex gap-3">
                     <button
                       onClick={() => setShowReportModal(false)}
-                      className="flex-1 px-4 py-2 border border-secondary-300 rounded-lg hover:bg-secondary-50 transition-colors"
+                      className="flex-1 px-4 py-2 border border-secondary-300 text-secondary-700 rounded-lg hover:bg-secondary-50 transition-colors"
                     >
-                      {isFrench ? 'Annuler' : 'Cancel'}
+                      {t.results.cancel}
                     </button>
                     <button
                       onClick={handleReport}
                       disabled={!reportText.trim()}
                       className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
                     >
-                      {isFrench ? 'Envoyer' : 'Send'}
+                      {t.results.send}
                     </button>
                   </div>
                 </>

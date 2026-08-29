@@ -4,20 +4,30 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
+import frTranslations from '@/locales/fr.json';
+
+/**
+ * Résout une clé de traduction (ex: 'nav.home') dans l'objet de traductions
+ */
+function resolveLabel(t: typeof frTranslations, key: string): string {
+  // @ts-expect-error - Navigation dynamique dans l'objet
+  const value = key.split('.').reduce((obj, k) => obj?.[k], t);
+  return typeof value === 'string' ? value : key;
+}
 
 /**
  * Liens du footer
  */
 const FOOTER_LINKS = {
   product: [
-    { key: 'nav.home', href: '/', label: 'Accueil' },
-    { key: 'nav.search', href: '/search', label: 'Rechercher' },
-    { key: 'nav.explorer', href: '/explorer', label: 'Explorer' },
-    { key: 'nav.dashboard', href: '/dashboard', label: 'Tableau de bord' },
+    { key: 'nav.home', href: '/' },
+    { key: 'nav.search', href: '/search' },
+    { key: 'nav.explorer', href: '/explorer' },
+    { key: 'nav.dashboard', href: '/dashboard' },
   ],
   resources: [
-    { key: 'nav.about', href: '/about', label: 'À propos' },
-    { key: 'nav.documentation', href: 'https://github.com/pilotthrought/Openprovena', label: 'Documentation' },
+    { key: 'nav.about', href: '/about' },
+    { key: 'nav.documentation', href: 'https://github.com/pilotthrought/Openprovena' },
   ],
 };
 
@@ -121,7 +131,7 @@ export default function Footer() {
                     href={link.href}
                     className="text-secondary-400 hover:text-white transition-colors duration-150"
                   >
-                    {link.label}
+                    {resolveLabel(t, link.key)}
                   </Link>
                 </li>
               ))}
@@ -142,7 +152,7 @@ export default function Footer() {
                     rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="text-secondary-400 hover:text-white transition-colors duration-150"
                   >
-                    {link.label}
+                    {resolveLabel(t, link.key)}
                   </a>
                 </li>
               ))}
@@ -156,7 +166,7 @@ export default function Footer() {
         <div className="container-main py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-secondary-500 text-sm">
-              © 2026 OpenProvena. Tous droits réservés.
+              © {currentYear} OpenProvena. {t.footer.rights_reserved}
             </p>
             <p className="text-secondary-500 text-sm flex items-center gap-2">
               {t.footer.open_source_notice}

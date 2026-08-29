@@ -43,7 +43,9 @@ interface LanguageProviderProps {
  * Gère la locale active et les traductions
  */
 export function LanguageProvider({ children, initialLocale = 'fr' }: LanguageProviderProps) {
-  // État de la locale active
+  // État de la locale active.
+  // La locale initiale vient du routing i18n de Next.js (préfixe d'URL),
+  // ce qui garantit la cohérence entre l'URL et le contenu affiché.
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
   /**

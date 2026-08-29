@@ -1,6 +1,7 @@
 // Page Explorer - Graphe de connaissances
 // Visualisation interactive des relations entre sources
 
+import { useRouter } from 'next/router';
 import React, { useState, useCallback } from 'react';
 import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
@@ -198,7 +199,7 @@ function GraphVisualization({ nodes, edges, selectedNode, onNodeClick }: {
  */
 export default function ExplorerPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -278,7 +279,7 @@ export default function ExplorerPage() {
         {/* Zone du graphe */}
         <div className="lg:col-span-3 card-elevated p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-secondary-900">Knowledge Graph</h2>
+            <h2 className="font-semibold text-secondary-900">{t.explorer.knowledge_graph}</h2>
             <div className="flex items-center gap-2">
               <button className="p-2 hover:bg-secondary-100 rounded-lg transition-colors" title={t.explorer.zoom_in}>
                 <svg className="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,19 +308,21 @@ export default function ExplorerPage() {
 
           {/* Légende */}
           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
-            <span className="text-secondary-500">Légende:</span>
+            <span className="text-secondary-500">{t.explorer.legend}</span>
             {[
-              { type: 'domain', label: 'Domaine' },
-              { type: 'author', label: 'Auteur' },
-              { type: 'organization', label: 'Organisation' },
-              { type: 'claim', label: 'Affirmation' },
+              { type: 'domain', labelKey: 'explorer.node_types.domain' },
+              { type: 'author', labelKey: 'explorer.node_types.author' },
+              { type: 'organization', labelKey: 'explorer.node_types.organization' },
+              { type: 'claim', labelKey: 'explorer.node_types.claim' },
             ].map((item) => (
               <span key={item.type} className="flex items-center gap-1.5">
                 <span 
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: getNodeColor(item.type) }}
                 />
-                <span className="text-secondary-600">{item.label}</span>
+                <span className="text-secondary-600">{String(
+                  item.labelKey.split('.').reduce((obj: unknown, k: string) => (obj as Record<string, unknown>)?.[k], t)
+                )}</span>
               </span>
             ))}
           </div>
@@ -331,7 +334,7 @@ export default function ExplorerPage() {
           {selectedNodeData ? (
             <div className="card-elevated p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-secondary-900">Détails</h3>
+                <h3 className="font-semibold text-secondary-900">{t.explorer.details}</h3>
                 <button 
                   onClick={() => setSelectedNode(null)}
                   className="p-1 hover:bg-secondary-100 rounded"
@@ -344,22 +347,22 @@ export default function ExplorerPage() {
               
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-secondary-500">Nom</p>
+                  <p className="text-sm text-secondary-500">{t.explorer.name}</p>
                   <p className="font-medium text-secondary-900">{selectedNodeData.label}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-secondary-500">Type</p>
+                  <p className="text-sm text-secondary-500">{t.explorer.type}</p>
                   <p className="font-medium text-secondary-900 capitalize">{selectedNodeData.type}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-secondary-500">Score</p>
+                  <p className="text-sm text-secondary-500">{t.explorer.score}</p>
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-secondary-900">{selectedNodeData.score}/100</span>
                     <span 
                       className="px-2 py-0.5 text-xs font-medium rounded-full text-white"
                       style={{ backgroundColor: getScoreColor(selectedNodeData.score) }}
                     >
-                      {selectedNodeData.score >= 80 ? 'Élevé' : selectedNodeData.score >= 60 ? 'Moyen' : 'Faible'}
+                      {selectedNodeData.score >= 80 ? t.explorer.high : selectedNodeData.score >= 60 ? t.explorer.medium : t.explorer.low}
                     </span>
                   </div>
                 </div>
@@ -368,7 +371,7 @@ export default function ExplorerPage() {
                   className="btn-primary w-full mt-4"
                   onClick={() => router.push(`/search?q=${selectedNodeData.label}`)}
                 >
-                  Analyser
+                  {t.explorer.analyze}
                 </button>
               </div>
             </div>
@@ -378,25 +381,25 @@ export default function ExplorerPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
               </svg>
               <p className="text-secondary-500">
-                Cliquez sur un nœud pour voir ses détails
+                {t.explorer.click_node_prompt}
               </p>
             </div>
           )}
 
           {/* Statistiques */}
           <div className="card-elevated p-6">
-            <h3 className="font-semibold text-secondary-900 mb-4">Statistiques</h3>
+            <h3 className="font-semibold text-secondary-900 mb-4">{t.explorer.statistics}</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-secondary-600">Nœuds</span>
+                <span className="text-secondary-600">{t.explorer.nodes}</span>
                 <span className="font-semibold text-secondary-900">{DEMO_NODES.length}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-secondary-600">Connexions</span>
+                <span className="text-secondary-600">{t.explorer.connections}</span>
                 <span className="font-semibold text-secondary-900">{DEMO_EDGES.length}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-secondary-600">Score moyen</span>
+                <span className="text-secondary-600">{t.explorer.avg_score}</span>
                 <span className="font-semibold text-secondary-900">
                   {Math.round(DEMO_NODES.reduce((acc, n) => acc + n.score, 0) / DEMO_NODES.length)}
                 </span>
@@ -409,5 +412,4 @@ export default function ExplorerPage() {
   );
 }
 
-// Import manquant pour useRouter
-import { useRouter } from 'next/router';
+
