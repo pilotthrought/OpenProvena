@@ -3,18 +3,29 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useLanguage, FLAGS } from '@/contexts/LanguageContext';
+import frTranslations from '@/locales/fr.json';
 import type { Locale } from '@/types';
+
+/**
+ * Résout une clé de traduction (ex: 'nav.home') dans l'objet de traductions
+ */
+function resolveLabel(t: typeof frTranslations, key: string): string {
+  // @ts-expect-error - Navigation dynamique dans l'objet
+  const value = key.split('.').reduce((obj, k) => obj?.[k], t);
+  return typeof value === 'string' ? value : key;
+}
 
 /**
  * Données de navigation
  */
 const NAV_ITEMS = [
-  { key: 'nav.home', href: '/', label: 'Accueil' },
-  { key: 'nav.search', href: '/search', label: 'Rechercher' },
-  { key: 'nav.explorer', href: '/explorer', label: 'Explorer' },
-  { key: 'nav.dashboard', href: '/dashboard', label: 'Tableau de bord' },
-  { key: 'nav.about', href: '/about', label: 'À propos' },
+  { key: 'nav.home', href: '/' },
+  { key: 'nav.search', href: '/search' },
+  { key: 'nav.explorer', href: '/explorer' },
+  { key: 'nav.dashboard', href: '/dashboard' },
+  { key: 'nav.about', href: '/about' },
 ];
 
 /**
@@ -22,6 +33,7 @@ const NAV_ITEMS = [
  * Inclut navigation, logo et sélecteur de langue
  */
 export default function Header() {
+  const router = useRouter();
   const { locale, setLocale, t } = useLanguage();
   
   // État pour le menu mobile et le dropdown de langue
@@ -49,6 +61,11 @@ export default function Header() {
   const handleLanguageChange = (newLocale: Locale) => {
     setLocale(newLocale);
     setIsLangDropdownOpen(false);
+    // Met à jour l'URL avec la nouvelle locale pour garantir la cohérence
+    // entre le contenu affiché et le préfixe de route i18n.
+    router.push({ pathname: router.pathname, query: router.query }, undefined, {
+      locale: newLocale,
+    });
   };
 
   return (
@@ -95,7 +112,7 @@ export default function Header() {
                 href={item.href}
                 className="nav-link"
               >
-                {item.label}
+                {resolveLabel(t, item.key)}
               </Link>
             ))}
           </div>
@@ -211,7 +228,7 @@ export default function Header() {
                 className="block py-3 px-4 text-secondary-700 hover:bg-secondary-50 hover:text-secondary-900 transition-colors duration-150"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {item.label}
+                {resolveLabel(t, item.key)}
               </Link>
             ))}
           </div>

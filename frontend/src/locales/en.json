@@ -37,7 +37,8 @@
     "analyzing": "Analyzing...",
     "results_title": "Analysis Results",
     "no_results": "No results found",
-    "try_again": "Try again with different terms"
+    "try_again": "Try again with different terms",
+    "analysis_error": "Unable to analyze this URL. Please check the URL or try again later."
   },
   "results": {
     "overall_score": "Overall Score",
@@ -55,7 +56,32 @@
     "historical_data": "Historical Data",
     "view_details": "View Details",
     "share_results": "Share Results",
-    "report_issue": "Report Issue"
+    "report_issue": "Report Issue",
+    "analysis_confidence": "Analysis Confidence",
+    "analysis_confidence_text": "This score reflects the certainty of our analysis based on available data.",
+    "enter_url_prompt": "Enter a URL or domain above to start the analysis",
+    "domain_age": "Domain age",
+    "years": "years",
+    "unknown": "Unknown",
+    "overview_tab": "Overview",
+    "key_indicators": "Key indicators",
+    "content_quality": "Content quality",
+    "citation_quality": "Citation quality",
+    "factcheck_match": "Fact-check match",
+    "score_evolution": "Score evolution",
+    "no_history": "No historical data available",
+    "no_related_sources": "No related sources found",
+    "share_title": "Trust analysis",
+    "share_text": "Trust score",
+    "link_copied": "Link copied!",
+    "link_copied_text": "The sharing link has been copied to your clipboard.",
+    "report_title": "Report an issue",
+    "report_text": "Does this score seem incorrect? Report it to improve our analysis.",
+    "report_placeholder": "Describe the issue...",
+    "report_sent": "Thank you!",
+    "report_sent_text": "Your report has been submitted. We will review it.",
+    "cancel": "Cancel",
+    "send": "Send"
   },
   "trust_levels": {
     "very_high": "Very High",
@@ -85,7 +111,17 @@
     "total_analyses": "Total Analyses",
     "avg_trust_score": "Average Score",
     "sources_monitored": "Sources Monitored",
-    "active_users": "Active Users"
+    "active_users": "Active Users",
+    "view_all": "View all",
+    "just_now": "Just now",
+    "minutes_ago": "{n} min ago",
+    "hours_ago": "{n}h ago",
+    "sources_count": "{n} sources",
+    "quick_actions": "Quick actions",
+    "new_analysis": "New analysis",
+    "new_analysis_desc": "Analyze a URL",
+    "explore_graph": "Explore the graph",
+    "explore_graph_desc": "Visualize relationships"
   },
   "explorer": {
     "title": "Knowledge Explorer",
@@ -101,21 +137,58 @@
       "organization": "Organization",
       "claim": "Claim",
       "narrative": "Narrative"
-    }
+    },
+    "knowledge_graph": "Knowledge Graph",
+    "legend": "Legend:",
+    "details": "Details",
+    "name": "Name",
+    "type": "Type",
+    "score": "Score",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "analyze": "Analyze",
+    "click_node_prompt": "Click on a node to see its details",
+    "statistics": "Statistics",
+    "nodes": "Nodes",
+    "connections": "Connections",
+    "avg_score": "Average score"
   },
   "about": {
     "title": "About OpenProvena",
-    "mission_title": "Our Mission",
-    "mission_text": "Combat disinformation and promote access to reliable and verifiable information.",
-    "how_works_title": "How It Works",
-    "transparency_title": "Transparency",
-    "transparency_text": "All our algorithms and data sources are open and verifiable.",
-    "community_title": "Community",
-    "community_text": "A project maintained by a global community of researchers and developers.",
-    "open_source_title": "Open Source",
-    "open_source_text": "Source code available under MIT license for inspection and contribution.",
-    "contact_title": "Contact Us",
-    "contact_email": "contact@openprovena.org"
+    "subtitle": "Discover our mission, our principles and how we evaluate information credibility.",
+    "problem_title": "The problem",
+    "problem_p1": "Today, you can easily check whether an Internet connection is secure. But when reading an article, an AI-generated answer or a social media post, it is often very difficult to quickly know:",
+    "problem_list": [
+      "where the information comes from;",
+      "what evidence supports it;",
+      "whether it has been modified;",
+      "why you should trust it."
+    ],
+    "problem_p2": "We have tools to secure communications.",
+    "problem_p3": "Far fewer to assess the trustworthiness of information itself.",
+    "solution_title": "The solution: OpenProvena",
+    "solution_p1": "OpenProvena was born from this reflection.",
+    "solution_p2": "The idea is to build an open standard that allows associating with information:",
+    "solution_list": [
+      "its provenance;",
+      "the evidence that accompanies it;",
+      "various trust indicators."
+    ],
+    "principles_title": "Our principles",
+    "principles_quote": "The goal is not to decide what is true or false. The goal is to give everyone the necessary elements to form their own judgment.",
+    "how_works_title": "How does it work?",
+    "feature_analyze_title": "Analysis",
+    "feature_analyze_text": "Enter a URL or domain to get a detailed credibility analysis",
+    "feature_signals_title": "Signals",
+    "feature_signals_text": "50+ signals analyzed: domain age, citation quality, transparency, etc.",
+    "feature_transparency_title": "Transparency",
+    "feature_transparency_text": "Every score is explained with the evidence supporting it",
+    "opensource_title": "100% Open Source",
+    "opensource_text": "OpenProvena is a community project. All the code is available, algorithms are transparent and documented.",
+    "github_link": "View on GitHub",
+    "contribute_title": "Contribute",
+    "contribute_text": "Want to take part in the project? Discover how to contribute on GitHub."
   },
   "footer": {
     "tagline": "An open standard for assessing information credibility.",
@@ -124,7 +197,8 @@
     "privacy": "Privacy",
     "terms": "Terms of Service",
     "copyright": "© 2024 OpenProvena. All rights reserved.",
-    "open_source_notice": "Open source project under MIT license."
+    "open_source_notice": "Open source project under MIT license.",
+    "rights_reserved": "All rights reserved."
   },
   "errors": {
     "invalid_url": "Invalid URL or domain",
@@ -161,12 +235,64 @@
     "previous": "Previous",
     "submit": "Submit",
     "reset": "Reset",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "learn_more": "Learn more"
   },
   "accessibility": {
     "skip_to_content": "Skip to main content",
     "menu_toggle": "Toggle menu",
     "language_selector": "Select language",
     "close_dialog": "Close dialog"
+  },
+  "layouts": {
+    "docs": {
+      "title": "Documentation",
+      "introduction": "Introduction",
+      "api": "API Reference",
+      "authentication": "Authentication",
+      "sdks": "SDKs"
+    },
+    "dashboard": {
+      "overview": "Overview",
+      "analyses": "My analyses",
+      "favorites": "Favorites",
+      "alerts": "Alerts"
+    }
+  },
+  "home": {
+    "badge": "Open Source Platform",
+    "hero_title_prefix": "Assess the credibility of",
+    "hero_title_highlight": "information",
+    "stats_sources": "Sources analyzed",
+    "stats_users": "Active users",
+    "stats_uptime": "Uptime",
+    "stats_signals": "Trust signals",
+    "features_subtitle": "Powerful tools to analyze and understand information credibility",
+    "how_works_title": "How does it work?",
+    "how_works_steps": [
+      {
+        "title": "Enter a URL",
+        "text": "Enter the address of the site or article you want to analyze"
+      },
+      {
+        "title": "Automatic analysis",
+        "text": "Our system examines 50+ trust signals in real time"
+      },
+      {
+        "title": "Transparent result",
+        "text": "Get a detailed score with clear explanations and sources"
+      }
+    ],
+    "cta_title": "Ready to verify your sources?",
+    "cta_text": "Join thousands of users who trust OpenProvena to evaluate information",
+    "cta_button": "Get started now",
+    "cta_github": "View on GitHub",
+    "opensource_title": "100% Open Source",
+    "opensource_text": "OpenProvena is a community project maintained by researchers and developers worldwide. All the code is available, audited and contributes to improving information transparency.",
+    "opensource_points": [
+      "Source code under MIT license",
+      "Transparent and documented algorithms",
+      "Community contributions welcome"
+    ]
   }
 }

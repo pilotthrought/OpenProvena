@@ -5,6 +5,7 @@ import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import Header from './Header';
 import Footer from './Footer';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LayoutProps {
   children: ReactNode;
@@ -45,6 +46,8 @@ export default function Layout({
  * Layout pour les pages de documentation
  */
 export function DocsLayout({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
+  const sidebar = t.layouts?.docs as Record<string, string> | undefined;
   return (
     <div className="min-h-screen flex flex-col bg-secondary-50">
       <Header />
@@ -53,26 +56,26 @@ export function DocsLayout({ children }: { children: ReactNode }) {
         {/* Sidebar de navigation */}
         <aside className="hidden lg:block w-64 flex-shrink-0 border-r border-secondary-200 bg-white">
           <nav className="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-6">
-            <h3 className="font-semibold text-secondary-900 mb-4">Documentation</h3>
+            <h3 className="font-semibold text-secondary-900 mb-4">{sidebar?.title ?? 'Documentation'}</h3>
             <ul className="space-y-2">
               <li>
                 <a href="/docs/introduction" className="nav-link block">
-                  Introduction
+                  {sidebar?.introduction ?? 'Introduction'}
                 </a>
               </li>
               <li>
                 <a href="/docs/api" className="nav-link block">
-                  API Reference
+                  {sidebar?.api ?? 'API Reference'}
                 </a>
               </li>
               <li>
                 <a href="/docs/authentication" className="nav-link block">
-                  Authentication
+                  {sidebar?.authentication ?? 'Authentication'}
                 </a>
               </li>
               <li>
                 <a href="/docs/sdks" className="nav-link block">
-                  SDKs
+                  {sidebar?.sdks ?? 'SDKs'}
                 </a>
               </li>
             </ul>
@@ -96,6 +99,8 @@ export function DocsLayout({ children }: { children: ReactNode }) {
  * Layout pour le dashboard
  */
 export function DashboardLayout({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
+  const sidebar = t.layouts?.dashboard as Record<string, string> | undefined;
   return (
     <div className="min-h-screen flex flex-col bg-secondary-50">
       <Header />
@@ -107,22 +112,22 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
             <ul className="space-y-1">
               <li>
                 <Link href="/dashboard" className="nav-link block nav-link-active">
-                  Vue d'ensemble
+                  {sidebar?.overview ?? "Vue d'ensemble"}
                 </Link>
               </li>
               <li>
                 <Link href="/dashboard/analyses" className="nav-link block">
-                  Mes analyses
+                  {sidebar?.analyses ?? 'Mes analyses'}
                 </Link>
               </li>
               <li>
                 <Link href="/dashboard/favorites" className="nav-link block">
-                  Favoris
+                  {sidebar?.favorites ?? 'Favoris'}
                 </Link>
               </li>
               <li>
                 <Link href="/dashboard/alerts" className="nav-link block">
-                  Alertes
+                  {sidebar?.alerts ?? 'Alertes'}
                 </Link>
               </li>
             </ul>

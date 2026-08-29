@@ -61,9 +61,10 @@ export default function SEO({
   ogImage = '/og-image.png',
   ogType = 'website',
   canonical,
-  locale = 'fr',
+  locale,
 }: SEOProps) {
-  const { t } = useLanguage();
+  const { t, locale: activeLocale } = useLanguage();
+  const effectiveLocale = locale ?? activeLocale ?? 'fr';
 
   // Construit le titre complet
   const pageTitle = title 
@@ -87,7 +88,7 @@ export default function SEO({
       <meta name="keywords" content={metaKeywords} />
       <meta name="author" content="OpenProvena" />
       <meta name="robots" content="index, follow" />
-      <meta name="language" content={locale.toUpperCase()} />
+      <meta name="language" content={effectiveLocale.toUpperCase()} />
       
       {/* Canonical URL */}
       <link rel="canonical" href={canonicalUrl} />
@@ -99,7 +100,7 @@ export default function SEO({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:site_name" content="OpenProvena" />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
+      <meta property="og:locale" content={effectiveLocale === 'fr' ? 'fr_FR' : 'en_US'} />
       
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />

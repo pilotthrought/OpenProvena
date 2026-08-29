@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import SearchBar from '@/components/SearchBar';
-import FeatureCard, { HOME_FEATURES } from '@/components/FeatureCard';
+import FeatureCard, { getHomeFeatures } from '@/components/FeatureCard';
 import TrustScore from '@/components/TrustScore';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { TrustAnalysis } from '@/types';
@@ -24,10 +24,10 @@ const DEMO_SCORES = [
  * Statistiques de démonstration
  */
 const STATS = [
-  { value: '50M+', label: 'Sources analysées' },
-  { value: '10K+', label: 'Utilisateurs actifs' },
-  { value: '99.9%', label: 'Disponibilité' },
-  { value: '50+', label: 'Signaux de confiance' },
+  { value: '50M+', labelKey: 'home.stats_sources' },
+  { value: '10K+', labelKey: 'home.stats_users' },
+  { value: '99.9%', labelKey: 'home.stats_uptime' },
+  { value: '50+', labelKey: 'home.stats_signals' },
 ];
 
 /**
@@ -38,6 +38,18 @@ export default function HomePage() {
   const { t } = useLanguage();
   const [isSearching, setIsSearching] = useState(false);
   const [searchResult, setSearchResult] = useState<TrustAnalysis | null>(null);
+
+  /**
+   * Résout une clé de traduction en lecture seule
+   */
+  const getLabel = useCallback(
+    (key: string): string => {
+      // @ts-expect-error - Navigation dynamique dans l'objet
+      const value = key.split('.').reduce((obj, k) => obj?.[k], t);
+      return typeof value === 'string' ? value : key;
+    },
+    [t]
+  );
 
   /**
    * Gère la soumission de la recherche
@@ -80,14 +92,14 @@ export default function HomePage() {
           <div className="flex justify-center mb-8">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-secondary-200 text-sm font-medium text-secondary-700">
               <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-              Plateforme Open Source
+              {t.home.badge}
             </span>
           </div>
           
           {/* Titre principal */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-secondary-900 mb-6 tracking-tight">
-            {t.hero.title.split(' ').slice(0, -2).join(' ')}{' '}
-            <span className="text-primary-600">l'information</span>
+            {t.home.hero_title_prefix}{' '}
+            <span className="text-primary-600">{t.home.hero_title_highlight}</span>
           </h1>
           
           {/* Sous-titre */}
@@ -131,11 +143,11 @@ export default function HomePage() {
         <div className="container-main">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {STATS.map((stat) => (
-              <div key={stat.label} className="text-center">
+              <div key={stat.labelKey} className="text-center">
                 <p className="text-4xl md:text-5xl font-bold text-primary-600 mb-2">
                   {stat.value}
                 </p>
-                <p className="text-secondary-600">{stat.label}</p>
+                <p className="text-secondary-600">{getLabel(stat.labelKey)}</p>
               </div>
             ))}
           </div>
@@ -151,12 +163,12 @@ export default function HomePage() {
             </h2>
             <div className="divider-gradient mx-auto mb-6"></div>
             <p className="text-xl text-secondary-600 max-w-2xl mx-auto">
-              Des outils puissants pour analyser et comprendre la crédibilité de l'information
+              {t.home.features_subtitle}
             </p>
           </div>
           
           <div className="grid-cards">
-            {HOME_FEATURES.map((feature) => (
+            {getHomeFeatures(t).map((feature) => (
               <FeatureCard
                 key={feature.id}
                 title={feature.title}
@@ -174,50 +186,25 @@ export default function HomePage() {
         <div className="container-main">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
-              Comment ça marche ?
+              {t.home.how_works_title}
             </h2>
             <div className="divider-gradient mx-auto"></div>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Étape 1 */}
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-600 text-2xl font-bold">
-                1
+            {t.home.how_works_steps.map((step, index) => (
+              <div key={index} className="text-center">
+                <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-600 text-2xl font-bold">
+                  {index + 1}
+                </div>
+                <h3 className="text-xl font-semibold text-secondary-900 mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-secondary-600">
+                  {step.text}
+                </p>
               </div>
-              <h3 className="text-xl font-semibold text-secondary-900 mb-3">
-                Saisissez une URL
-              </h3>
-              <p className="text-secondary-600">
-                Entrez l'adresse du site ou de l'article que vous souhaitez analyser
-              </p>
-            </div>
-            
-            {/* Étape 2 */}
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-600 text-2xl font-bold">
-                2
-              </div>
-              <h3 className="text-xl font-semibold text-secondary-900 mb-3">
-                Analyse automatique
-              </h3>
-              <p className="text-secondary-600">
-                Notre système examine plus de 50 signaux de confiance en temps réel
-              </p>
-            </div>
-            
-            {/* Étape 3 */}
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-600 text-2xl font-bold">
-                3
-              </div>
-              <h3 className="text-xl font-semibold text-secondary-900 mb-3">
-                Résultat transparent
-              </h3>
-              <p className="text-secondary-600">
-                Obtenez un score détaillé avec des explications claires et des sources
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -226,17 +213,17 @@ export default function HomePage() {
       <section className="py-20 bg-gradient-to-r from-primary-600 to-primary-700">
         <div className="container-main text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Prêt à vérifier vos sources ?
+            {t.home.cta_title}
           </h2>
           <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-            Rejoignez des milliers d'utilisateurs qui font confiance à OpenProvena pour évaluer l'information
+            {t.home.cta_text}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => router.push('/search')}
               className="px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition-colors duration-200 shadow-lg hover:shadow-xl"
             >
-              Commencer maintenant
+              {t.home.cta_button}
             </button>
             <a
               href="https://github.com/pilotthrought/OpenProvena"
@@ -247,7 +234,7 @@ export default function HomePage() {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
               </svg>
-              Voir sur GitHub
+              {t.home.cta_github}
             </a>
           </div>
         </div>
@@ -259,31 +246,20 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-bold mb-6">
-                100% Open Source
+                {t.home.opensource_title}
               </h2>
               <p className="text-secondary-300 mb-6 leading-relaxed">
-                OpenProvena est un projet communautaire maintenu par des chercheurs et développeurs du monde entier. 
-                Tout le code est disponible, audité et contribue à l'amélioration de la transparence de l'information.
+                {t.home.opensource_text}
               </p>
               <ul className="space-y-3">
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Code source sous licence MIT</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Algorithmes transparents et documentés</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Contributions communautaires bienvenues</span>
-                </li>
+                {t.home.opensource_points.map((point) => (
+                  <li key={point} className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>{point}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="flex justify-center">

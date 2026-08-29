@@ -7,6 +7,7 @@ import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import TrustScore from '@/components/TrustScore';
 import { useLanguage } from '@/contexts/LanguageContext';
+import frTranslations from '@/locales/fr.json';
 
 /**
  * Données de démonstration pour le dashboard
@@ -61,32 +62,37 @@ function formatNumber(num: number): string {
 /**
  * Formatte une date relative
  */
-function formatRelativeTime(dateStr: string): string {
+function formatRelativeTime(dateStr: string, locale: string, t: typeof frTranslations): string {
   const date = new Date(dateStr);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);
-  
-  if (diffMins < 1) return "À l'instant";
-  if (diffMins < 60) return `Il y a ${diffMins} min`;
-  
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `Il y a ${diffHours}h`;
-  
-  return date.toLocaleDateString('fr-FR');
-}
 
+  const getLabel = (key: string): string => {
+    // @ts-expect-error - Navigation dynamique dans l'objet
+    const value = key.split('.').reduce((obj, k) => obj?.[k], t);
+    return typeof value === 'string' ? value : key;
+  };
+
+  if (diffMins < 1) return getLabel('dashboard.just_now');
+  if (diffMins < 60) return getLabel('dashboard.minutes_ago').replace('{n}', String(diffMins));
+
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return getLabel('dashboard.hours_ago').replace('{n}', String(diffHours));
+
+  return date.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US');
+}
 /**
  * Page Dashboard
  */
 export default function DashboardPage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   return (
     <Layout>
       <SEO 
         title={t.dashboard.title}
-        description="Tableau de bord OpenProvena - Statistiques et analyses récentes"
+        description={t.dashboard.overview}
         canonical="/dashboard"
       />
       
@@ -209,7 +215,7 @@ export default function DashboardPage() {
                   href="/search"
                   className="text-sm text-primary-600 hover:text-primary-700 font-medium"
                 >
-                  Voir tout
+                  {t.dashboard.view_all}
                 </Link>
               </div>
             </div>
@@ -236,7 +242,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-secondary-500">
-                        {formatRelativeTime(analysis.analyzed_at)}
+                        {formatRelativeTime(analysis.analyzed_at, locale, t)}
                       </p>
                     </div>
                   </div>
@@ -260,7 +266,9 @@ export default function DashboardPage() {
                 <div key={narrative.id} className="flex items-start justify-between">
                   <div className="flex-1">
                     <p className="font-medium text-secondary-900">{narrative.title}</p>
-                    <p className="text-sm text-secondary-500">{narrative.sources} sources</p>
+                    <p className="text-sm text-secondary-500">
+                      {t.dashboard.sources_count.replace('{n}', String(narrative.sources))}
+                    </p>
                   </div>
                   <div className="ml-4">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
@@ -279,7 +287,7 @@ export default function DashboardPage() {
           {/* Actions rapides */}
           <div className="card p-6">
             <h2 className="text-lg font-semibold text-secondary-900 mb-4">
-              Actions rapides
+              {t.dashboard.quick_actions}
             </h2>
             <div className="space-y-3">
               <Link
@@ -292,8 +300,8 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-secondary-900">Nouvelle analyse</p>
-                  <p className="text-sm text-secondary-500">Analyser une URL</p>
+                  <p className="font-medium text-secondary-900">{t.dashboard.new_analysis}</p>
+                  <p className="text-sm text-secondary-500">{t.dashboard.new_analysis_desc}</p>
                 </div>
               </Link>
               
@@ -307,8 +315,8 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-secondary-900">Explorer le graphe</p>
-                  <p className="text-sm text-secondary-500">Visualiser les relations</p>
+                  <p className="font-medium text-secondary-900">{t.dashboard.explore_graph}</p>
+                  <p className="text-sm text-secondary-500">{t.dashboard.explore_graph_desc}</p>
                 </div>
               </Link>
             </div>

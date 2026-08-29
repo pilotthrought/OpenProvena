@@ -1,11 +1,23 @@
 // _document.tsx - Document HTML de base
 // Personnalise le HTML initial pour OpenProvena
 
-import { Html, Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+import frTranslations from '@/locales/fr.json';
+import enTranslations from '@/locales/en.json';
 
-export default function Document() {
+interface DocumentProps {
+  locale: string;
+}
+
+export default function AppDocument({ locale = 'fr' }: DocumentProps) {
+  const translations = locale === 'en' ? enTranslations : frTranslations;
+  const accessibility = (translations as Record<string, any>).accessibility as
+    | Record<string, string>
+    | undefined;
+  const skipLabel = accessibility?.skip_to_content ?? 'Aller au contenu principal';
+
   return (
-    <Html lang="fr">
+    <Html lang={locale}>
       <Head>
         {/* Meta tags additionnels */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,7 +60,7 @@ export default function Document() {
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-lg"
         >
-          Aller au contenu principal
+          {skipLabel}
         </a>
         
         {/* Main app */}
@@ -60,3 +72,11 @@ export default function Document() {
     </Html>
   );
 }
+
+/**
+ * Récupère la locale active pour définir la langue du document
+ */
+AppDocument.getInitialProps = async (ctx: any) => {
+  const initialProps = await Document.getInitialProps(ctx);
+  return { ...initialProps, locale: ctx.locale ?? 'fr' };
+};
